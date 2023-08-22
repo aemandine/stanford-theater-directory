@@ -1,0 +1,24 @@
+@import './base.css';
+
+#app {
+  width: 100vw;
+  margin: 0;
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: rgba(120, 103, 199, 0.8);
+  transition: 0.4s;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: rgba(120, 103, 199, 0.2);
+  }
+}
+
+main {
+  margin: 20px 30px;
+}
