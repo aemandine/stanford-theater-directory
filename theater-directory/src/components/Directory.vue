@@ -102,10 +102,10 @@ h3 {
 <script lang="ts">
 // Imports
 import { ref, computed } from 'vue'
-import { UserInfo, Filters, InterestLevel } from '@/mixins/classes'
-import Login from '@/components/Login.vue'
+import { UserInfo, Filters, InterestLevel } from '@/helpers/classes'
+import Login from '@/components/TheLogin.vue'
 import DirectoryRow from '@/components/DirectoryRow.vue'
-import Categories from '@/mixins/categories'
+import Categories from '@/helpers/categories'
 
 // Refs
 const filters = ref(new Filters())

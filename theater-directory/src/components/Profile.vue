@@ -121,9 +121,9 @@
 <script lang="ts">
 // Imports
 import { ref } from 'vue'
-import { UserInfo } from '@/mixins/classes'
-import Login from '@/components/Login.vue'
-import Categories from '@/mixins/categories'
+import { UserInfo } from '@/helpers/classes'
+import Login from '@/components/TheLogin.vue'
+import Categories from '@/helpers/categories'
 
 // Refs
 const userInfo = ref(new UserInfo())
