@@ -1,6 +1,6 @@
 <script lang="ts">
 import Directory from "@/components/Directory.vue"
-import loginMethods from "@/mixins/login-methods"
+import loginMethods from "@/helpers/login-methods"
 export default {
   setup() {
     return {

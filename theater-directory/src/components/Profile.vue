@@ -98,7 +98,7 @@
 
 <style scoped>
 .profile {
-  width: 800px;
+  width: 700px;
 }
 .profile #inline {
   display: grid;

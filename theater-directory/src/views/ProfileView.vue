@@ -1,6 +1,6 @@
 <script lang="ts">
 import Profile from "@/components/Profile.vue"
-import loginMethods from "@/mixins/login-methods"
+import loginMethods from "@/helpers/login-methods"
 export default {
   setup() {
     return {
