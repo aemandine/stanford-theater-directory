@@ -22,3 +22,20 @@ a,
 main {
   margin: 20px 30px;
 }
+
+h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  text-align: left;
+  font-weight: bold;
+}
+h3 {
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 800px) {
+  h1 {
+    text-align: center;
+  }
+}

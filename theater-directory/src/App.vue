@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import LogoPanel from './components/LogoPanel.vue'
+document.cookie = "userId=0f1a255c-31e9-48c7-9b9e-f713718f085f" // Remove later
 </script>
 
 <template>

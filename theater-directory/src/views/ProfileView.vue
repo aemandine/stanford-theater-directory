@@ -1,13 +1,24 @@
-<script setup lang="ts">
-import Profile from "../components/Profile.vue"
+<script lang="ts">
+import Profile from "@/components/Profile.vue"
+import loginMethods from "@/mixins/login-methods"
+export default {
+  setup() {
+    return {
+      userId: loginMethods.methods.getUserId()
+    }
+  },
+  components: {
+    Profile
+  }
+}
 </script>
 
 <template>
   <main>
     <h1>Profile</h1>
-    <Suspense>
+    <Suspense v-if="userId !== null">
       <template #default>
-        <Profile userId="0f1a255c-31e9-48c7-9b9e-f713718f085f" />
+        <Profile :userId="userId" />
       </template>
       <template #fallback>
         <p>Loading profile...</p>
@@ -15,3 +26,9 @@ import Profile from "../components/Profile.vue"
     </Suspense>
   </main>
 </template>
+
+<style scoped>
+h1 {
+  margin-bottom: 15px;
+}
+</style>

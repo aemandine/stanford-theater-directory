@@ -1,8 +1,16 @@
 <template>
   <div class="profile">
     <v-form
-      v-if="userId !== undefined && userInfo !== null"
+      v-if="userInfo.id"
     >
+      <v-alert
+          color="var(--vt-c-purple-light)"
+          icon="$warning"
+          title="Note on privacy"
+          text="All the information on your profile is public to anyone with a stanford.edu email. Also, I don't
+          know why anyone would target this website, but technically a hacker could steal everyone's profile info. 
+          So please don't put any private information in your profile!"
+      ></v-alert>
       <h2>Personal information</h2>
       <div id="inline">
         <v-text-field 
@@ -12,20 +20,20 @@
         ></v-text-field>
         <v-select 
           label="Grad year" 
-          :items="years"
+          :items="Categories.YEARS"
           v-model="userInfo.graduationYear"
           required
         ></v-select>
       </div>
       <v-text-field
-        label="Email (primary)" 
-        v-model="userInfo.primaryEmail"
-        required
-      ></v-text-field>
-      <v-text-field
         label="Email (Stanford)" 
         v-model="userInfo.accountEmail"
         readonly
+      ></v-text-field>
+      <v-text-field
+        label="Email (personal)" 
+        v-model="userInfo.personalEmail"
+        required
       ></v-text-field>
       <h2>Your interests</h2>
       <h3>Wondering what any of these roles are? Check out
@@ -35,17 +43,17 @@
         v-model="userInfo.rolesOfInterest"
         chips
         closable-chips
-        :items="roles"
+        :items="Categories.ROLES"
         multiple
       >
       </v-autocomplete>
       <v-autocomplete
         label="What instruments do you play?"
         v-model="userInfo.instruments"
-        v-if="userInfo.rolesOfInterest.includes('Orchestra')"
+        v-if="userInfo.rolesOfInterest.includes('Orchestra') || userInfo.rolesOfInterest.includes('Musical Improvisor')"
         chips
         closable-chips
-        :items="instruments"
+        :items="Categories.INSTRUMENTS"
         multiple
       ></v-autocomplete>
       <v-autocomplete
@@ -53,7 +61,7 @@
         v-model="userInfo.rolesToLearn"
         chips
         closable-chips
-        :items="roles"
+        :items="Categories.ROLES"
         multiple
       ></v-autocomplete>
       <v-autocomplete
@@ -62,7 +70,7 @@
         v-if="userInfo.rolesToLearn.length > 0"
         chips
         closable-chips
-        :items="waysToLearn"
+        :items="Categories.WAYS_TO_LEARN"
         multiple
       ></v-autocomplete>
       <h2>Other information</h2>
@@ -74,71 +82,54 @@
         persistent-hint
       ></v-textarea>
       <br/>
-      <v-btn
-        color="var(--vt-c-purple-light)"
-        @click="setUserInfo(userId, userInfo)"
-        :loading="midSave"
-      >
-      <p class="font-weight-bold text-white">Save</p>
-      </v-btn>
+      <div class="button">
+        <v-btn
+          color="var(--vt-c-purple-light)"
+          @click="setUserInfo(userId ?? '', userInfo)"
+          :loading="midSave"
+        >
+        <p class="font-weight-bold text-white">Save</p>
+        </v-btn>
+      </div>
     </v-form>
-    <p v-else>Failed to load profile.</p>
+    <Login v-else/>
   </div>
 </template>
 
 <style scoped>
 .profile {
-  width: 50vw;
+  width: 800px;
 }
 .profile #inline {
   display: grid;
   grid-template-columns: 2fr 1fr;
   column-gap: 20px;
 }
-h2 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  text-align: left;
-  font-weight: bold;
-}
-h3 {
-  margin-top: -10px;
-  margin-bottom: 10px;
-}
-
 @media (max-width: 800px) {
   .profile {
     width: 100%;
+  }
+  h2, h3 {
+    text-align: center;
+  }
+  .button {
+    text-align: center;
   }
 }
 </style>
 
 <script lang="ts">
+// Imports
 import { ref } from 'vue'
-const roles = [
-  "Director", "Producer", "Production Manager", "Technical Director",
-  "Actor", "Improvisor", "Stage Manager", "Community Wellness Coordinator",
-  "Intimacy Director", "Choreographer (Dance)", "Choreographer (Combat)",
-  "Choreographer (Other)", "Lighting Designer", "Sound Designer",
-  "Multimedia/Projections Designer", "Graphic Designer", "Costume Designer",
-  "Set Designer", "Prop Master", "Writer", "Deviser", "Dramaturg",
-  "Music Director", "Vocal Director", "Orchestra", "Board Operator",
-  "Hair and Makeup", "General Run Crew"
-].sort()
-const instruments = [
-  "Violin", "Viola", "Cello", "Double Bass", "Flute", "Oboe", "Clarinet", "Bassoon", "Trumpet",
-  "Horn", "Trombone", "Tuba", "Timpani", "Percussion", "Harp", "Piano", "Piccolo", "English Horn",
-  "Bass Clarinet", "Contrabassoon", "Cornet", "Euphonium", "Saxophone", "Celesta", "Glockenspiel", "Xylophone",
-  "Marimba", "Vibraphone", "Bass Drum", "Snare Drum", "Cymbals", "Triangle", "Tambourine", "Gong", "Bass Trombone",
-  "Tenor Trombone", "Oboe d'Amore", "Soprano Saxophone", "Alto Saxophone", "Tenor Saxophone", "Baritone Saxophone",
-  "Contrabass Clarinet", "Soprano Cornet", "Alto Cornet", "Subcontrabass Tuba", "Wagner Tuba", "Sousaphone"
-].sort()
-const waysToLearn = [
-  "Workshop",
-  "Assistant role",
-  "Casual one-on-one meeting with a student in that role"
-].sort()
-const years = [2024, 2025, 2026, 2027, 2028, 2029, 2030]
+import { UserInfo } from '@/mixins/classes'
+import Login from '@/components/Login.vue'
+import Categories from '@/mixins/categories'
+
+// Refs
+const userInfo = ref(new UserInfo())
+const midSave = ref(false)
+
+// Functions
 const getUserInfo = async(id: string) => {
   try {
     const { userInfo } = await (await fetch(`/api/user/get/${id}`)).json()
@@ -147,52 +138,36 @@ const getUserInfo = async(id: string) => {
     return { error: "Could not load user info" }
   }
 }
-class UserInfo {
-  name: string = ""
-  graduationYear: number = 0
-  primaryEmail: string = ""
-  accountEmail: string = ""
-  rolesOfInterest: string[] = []
-  rolesToLearn: string[] = []
-  notes: string = ""
-  instruments: string[] = []
-  waysToLearn: string[] = []
+const setUserInfo = async(id: string, userInfo: UserInfo) => {
+  midSave.value = true
+  const headers = {
+    "Content-Type": "application/json"
+  }
+  const resp = await fetch(`/api/user/set/${id}`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(userInfo)
+  })
+  midSave.value = false
 }
+
 export default {
   props: {
     userId: String
   },
+  components: {
+    Login
+  },
   async setup(props) {
-    const userInfo = ref(new UserInfo())
-    const midSave = ref(false)
-
-    const setUserInfo = async(id: string, userInfo: UserInfo) => {
-      midSave.value = true
-      const headers = {
-        "Content-Type": "application/json"
-      }
-      const resp = await fetch(`/api/user/set/${id}`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(userInfo)
-      })
-      midSave.value = false
-    }
-    
     if (props.userId) {
       var fetchedUserInfo = await getUserInfo(props.userId)
-      if (fetchedUserInfo.hasOwnProperty("error")) {
-        fetchedUserInfo = null
-      } else {
+      if (!fetchedUserInfo.hasOwnProperty("error")) {
         userInfo.value = fetchedUserInfo
       }
     }
     return {
-      userInfo: userInfo ?? null,
-      roles,
-      instruments,
-      waysToLearn,
-      years,
+      userInfo,
+      Categories,
       setUserInfo,
       midSave
     }

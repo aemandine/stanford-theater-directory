@@ -3,7 +3,7 @@ interface Env {
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  return Response.json({ userInfo: {"name":"Anna M","graduationYear":2024,"accountEmail":"amist@stanford.edu","primaryEmail":"amist@gmail.com","rolesOfInterest":["Producer", "Actor", "Writer", "Deviser", "Run Crew"],"rolesToLearn":["Intimacy Director", "Board Operator", "Hair and Makeup"],"notes":"Nothing!","instruments":[]}})
+  //return Response.json({ userInfo: {"name":"Anna M","graduationYear":2024,"accountEmail":"amist@stanford.edu","primaryEmail":"amist@gmail.com","rolesOfInterest":["Producer", "Actor", "Writer", "Deviser", "Run Crew"],"rolesToLearn":["Intimacy Director", "Board Operator", "Hair and Makeup"],"notes":"Nothing!","instruments":[]}})
   let userId = context.params.userId
   if (typeof userId !== "string") {
     return Response.json({ error: "Malformed api request" })
