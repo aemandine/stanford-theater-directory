@@ -7,8 +7,9 @@ export default {
     "Multimedia/Projections Designer", "Graphic Designer", "Costume Designer",
     "Set Designer", "Prop Master", "Writer", "Deviser", "Dramaturg",
     "Music Director", "Vocal Director", "Orchestra", "Board Operator",
-    "Hair and Makeup", "General Run Crew", "Musical Improvisor"
+    "Hair and Makeup", "General Run Crew", "Musical Improvisor", "Musician"
   ].sort(),
+  MUSICAL_ROLES: ["Musical Improvisor", "Orchestra", "Musician"],
   INSTRUMENTS: [
     "Violin", "Viola", "Cello", "Double Bass", "Flute", "Oboe", "Clarinet", "Bassoon", "Trumpet",
     "Horn", "Trombone", "Tuba", "Timpani", "Percussion", "Harp", "Piano", "Piccolo", "English Horn",
@@ -20,7 +21,7 @@ export default {
   WAYS_TO_LEARN: [
     "Workshop",
     "Assistant role",
-    "Casual 1-on-1 meeting with a student"
+    "Casual 1-on-1 with student"
   ].sort(),
   YEARS: [2024, 2025, 2026, 2027, 2028, 2029, 2030]
 }

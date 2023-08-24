@@ -13,9 +13,10 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/profile',
+      path: '/profile/:id?',
       name: 'profile',
-      component: ProfileView
+      component: ProfileView,
+      props: true
     },
     {
       path: '/roles',
@@ -26,7 +27,7 @@ const router = createRouter({
       path: '/directory',
       name: 'directory',
       component: DirectoryView
-    },
+    }
   ]
 })
 

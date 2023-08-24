@@ -1,102 +1,83 @@
 <template>
   <div class="profile">
-    <v-form
+    <div
       v-if="userInfo.id"
     >
-      <v-alert
-          color="var(--vt-c-purple-light)"
-          icon="$warning"
-          title="Note on privacy"
-          text="All the information on your profile is public to anyone with a stanford.edu email. Also, I don't
-          know why anyone would target this website, but technically a hacker could steal everyone's profile info. 
-          So please don't put any private information in your profile!"
-      ></v-alert>
-      <h2>Personal information</h2>
-      <div id="inline">
-        <v-text-field 
-          label="Name"
-          v-model="userInfo.name"
-          required
-        ></v-text-field>
-        <v-select 
-          label="Grad year" 
-          :items="Categories.YEARS"
-          v-model="userInfo.graduationYear"
-          required
-        ></v-select>
+      <h2>{{ userInfo.name }}</h2>
+      <h3>{{ userInfo.accountEmail }}</h3>
+      <h3>Class of {{ userInfo.graduationYear }}</h3>
+      <div 
+        class="chips"
+        v-if="userInfo.rolesOfInterest.length > 0"
+        >
+        <h2>They are interested in...</h2>
+        <h3>Wondering what any of these roles are? Check out
+          our <a href="/roles" target="_blank">role descriptions</a>!</h3>
+        <v-chip 
+          v-for="role in userInfo.rolesOfInterest.sort()"
+          class="mr-1 mb-1"
+          color="green"
+          >
+          {{ role }}
+        </v-chip>
       </div>
-      <v-text-field
-        label="Email (Stanford)" 
-        v-model="userInfo.accountEmail"
-        readonly
-      ></v-text-field>
-      <v-text-field
-        label="Email (personal)" 
-        v-model="userInfo.personalEmail"
-        required
-      ></v-text-field>
-      <h2>Your interests</h2>
-      <h3>Wondering what any of these roles are? Check out
-        our <a href="/roles" target="_blank">role descriptions</a>!</h3>
-      <v-autocomplete
-        label="What roles are you interested in?"
-        v-model="userInfo.rolesOfInterest"
-        chips
-        closable-chips
-        :items="Categories.ROLES"
-        multiple
-      >
-      </v-autocomplete>
-      <v-autocomplete
-        label="What instruments do you play?"
-        v-model="userInfo.instruments"
-        v-if="userInfo.rolesOfInterest.includes('Orchestra') || userInfo.rolesOfInterest.includes('Musical Improvisor')"
-        chips
-        closable-chips
-        :items="Categories.INSTRUMENTS"
-        multiple
-      ></v-autocomplete>
-      <v-autocomplete
-        label="What roles would you like to learn more about?"
-        v-model="userInfo.rolesToLearn"
-        chips
-        closable-chips
-        :items="Categories.ROLES"
-        multiple
-      ></v-autocomplete>
-      <v-autocomplete
-        label="How would you like to learn more about a role?"
-        v-model="userInfo.waysToLearn"
+      <div 
+        class="chips"
         v-if="userInfo.rolesToLearn.length > 0"
-        chips
-        closable-chips
-        :items="Categories.WAYS_TO_LEARN"
-        multiple
-      ></v-autocomplete>
-      <h2>Other information</h2>
+        >
+        <h2>They want to learn more about...</h2>
+        <h3>Wondering what any of these roles are? Check out
+          our <a href="/roles" target="_blank">role descriptions</a>!</h3>
+        <v-chip 
+          v-for="role in userInfo.rolesToLearn.sort()"
+          class="mr-1 mb-1"
+          color="blue"
+          >
+          <i>{{ role }}</i>
+        </v-chip>
+      </div>
+      <div 
+        class="chips"
+        v-if="userInfo.waysToLearn.length > 0"
+        >
+        <h2>They like to learn about new roles via...</h2>
+        <v-chip 
+          v-for="style in userInfo.waysToLearn.sort()"
+          class="mr-1 mb-1"
+          color="orange"
+          >
+          <i>{{ style }}</i>
+        </v-chip>
+      </div>
+      <div 
+        class="chips" 
+        v-if="Categories.MUSICAL_ROLES.some(r => userInfo.rolesOfInterest.includes(r)) && userInfo.instruments.length > 0"
+      >
+        <h2>They play the...</h2>
+        <v-chip 
+          v-for="instrument in userInfo.instruments.sort()"
+          class="mr-1 mb-1"
+          color="purple"
+          >
+          <i>{{ instrument }}</i>
+        </v-chip>
+      </div>
+      <h2>Previous theaterical experience and other notes</h2>
       <v-textarea 
-        label="Previous theatrical experience and other notes"
         v-model="userInfo.notes"
-        auto-grow
-        hint="Previous theatrical experience is not required!!"
-        persistent-hint
+        hide-details
+        readonly
       ></v-textarea>
       <br/>
-      <div class="button">
-        <v-btn
-          color="var(--vt-c-purple-light)"
-          @click="setUserInfo(userId ?? '', userInfo)"
-          :loading="midSave"
-        >
-        <p class="font-weight-bold text-white">Save</p>
-        </v-btn>
-      </div>
-    </v-form>
-    <Login v-else/>
+    </div>
+    <p v-else>User not found.</p>
   </div>
 </template>
 
 <style scoped>
+h1 {
+  margin-bottom: 20px;
+}
 .profile {
   width: 700px;
 }
@@ -115,19 +96,19 @@
   .button {
     text-align: center;
   }
+  .chips {
+    text-align: center;
+  }
 }
 </style>
 
 <script lang="ts">
 // Imports
-import { ref } from 'vue'
 import { UserInfo } from '@/helpers/classes'
-import Login from '@/components/TheLogin.vue'
 import Categories from '@/helpers/categories'
+import loginMethods from "@/helpers/login-methods"
 
-// Refs
-const userInfo = ref(new UserInfo())
-const midSave = ref(false)
+var userInfo = new UserInfo()
 
 // Functions
 const getUserInfo = async(id: string) => {
@@ -138,38 +119,23 @@ const getUserInfo = async(id: string) => {
     return { error: "Could not load user info" }
   }
 }
-const setUserInfo = async(id: string, userInfo: UserInfo) => {
-  midSave.value = true
-  const headers = {
-    "Content-Type": "application/json"
-  }
-  const resp = await fetch(`/api/user/set/${id}`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(userInfo)
-  })
-  midSave.value = false
-}
 
 export default {
   props: {
     userId: String
   },
-  components: {
-    Login
-  },
   async setup(props) {
     if (props.userId) {
       var fetchedUserInfo = await getUserInfo(props.userId)
-      if (!fetchedUserInfo.hasOwnProperty("error")) {
-        userInfo.value = fetchedUserInfo
+      //var fetchedUserInfo = { "id": "0f1a255c-31e9-48c7-9b9e-f713718f085f", "name": "Anna Grelooze McSchmooze", "graduationYear": 2025, "accountEmail": "amist@stanford.edu", "waysToLearn": ["Assistant role", "Workshop"], "personalEmail": "amist@gmail.com", "rolesOfInterest": [ "Producer", "Actor", "Writer", "Deviser", "Run Crew", "Orchestra" ], "rolesToLearn": [ "Intimacy Director", "Actor", "Board Operator", "Hair and Makeup" ], "instruments": [ "Cymbals" ], "notes": "Producer for Circle Mirror Transformation, Assistant Director for 106, Actor in LINES" }
+      if (!fetchedUserInfo.hasOwnProperty("error") && fetchedUserInfo.id === props.userId) {
+        userInfo = fetchedUserInfo
       }
     }
     return {
       userInfo,
       Categories,
-      setUserInfo,
-      midSave
+      loginMethods
     }
   }
 }

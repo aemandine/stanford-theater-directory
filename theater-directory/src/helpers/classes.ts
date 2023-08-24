@@ -3,7 +3,6 @@ export class UserInfo {
   name: string = ""
   graduationYear: number = 0
   accountEmail: string = ""
-  personalEmail: string = ""
   rolesOfInterest: string[] = []
   rolesToLearn: string[] = []
   notes: string = ""
@@ -14,9 +13,13 @@ export class UserInfo {
 export class Filters {
   interestLevels: InterestLevel[] = []
   role: string = ""
-  isEmpty() {
-    return !this.role && this.interestLevels.length == 0
+  learningStyles: string[] = []
+  instruments: string[] = []
+  hasFilter() {
+    return this.role || this.interestLevels.length > 0
   }
+  sortBy: string = "" // should be a UserInfo class
+  sortReversed: boolean = false
 }
 
 export enum InterestLevel {

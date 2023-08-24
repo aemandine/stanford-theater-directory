@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import LogoPanel from '@/components/TheLogoPanel.vue'
-document.cookie = "userId=0f1a255c-31e9-48c7-9b9e-f713718f085f" // Remove later
+import loginMethods from './helpers/login-methods'
+//document.cookie = "userId=0f1a255c-31e9-48c7-9b9e-f713718f085f" // Remove later
 </script>
 
 <template>
   <header>
-    <LogoPanel />
-    <h1>Cross-Organizational Theater Directory</h1>
+    <h1>Stanford Unofficial Theater Directory</h1>
     <nav>
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/roles">Browse Roles</RouterLink>
-      <RouterLink to="/directory">Browse Directory</RouterLink>
-      <RouterLink to="/profile">My Profile</RouterLink>
+      <RouterLink to="/directory" v-if="loginMethods.methods.getUserId()">Browse Directory</RouterLink>
+      <RouterLink to="/profile" v-if="loginMethods.methods.getUserId()">My Profile</RouterLink>
     </nav>
   </header>
 
@@ -34,7 +33,6 @@ header {
 h1 {
   text-align: left;
   flex-grow: 2;
-  margin: 0px 20px;
   font-weight: bold;
   line-height: 1;
 }

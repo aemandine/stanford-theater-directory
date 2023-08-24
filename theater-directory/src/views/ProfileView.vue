@@ -1,22 +1,38 @@
 <script lang="ts">
+import ProfileEdit from "@/components/ProfileEdit.vue"
 import Profile from "@/components/Profile.vue"
 import loginMethods from "@/helpers/login-methods"
 export default {
-  setup() {
-    return {
-      userId: loginMethods.methods.getUserId()
-    }
-  },
+  props: ['id'],
   components: {
-    Profile
+    ProfileEdit, Profile
+  },
+  setup(props) {
+    const userId = props.id ?? ""
+     // If the userId is empty or our own ID, we can edit
+    const edit = userId.length == 0 || userId == loginMethods.methods.getUserId()
+    return {
+      userId, 
+      edit
+    }
   }
 }
 </script>
 
 <template>
   <main>
-    <h1>Profile</h1>
-    <Suspense v-if="userId !== null">
+    <!-- Editing my own profile -->
+    <Suspense v-if="edit">
+      <template #default>
+        <ProfileEdit />
+      </template>
+      <template #fallback>
+        <p>Loading your profile...</p>
+      </template>
+    </Suspense>
+
+    <!-- Viewing someone else's profile -->
+    <Suspense v-else>
       <template #default>
         <Profile :userId="userId" />
       </template>
@@ -26,9 +42,3 @@ export default {
     </Suspense>
   </main>
 </template>
-
-<style scoped>
-h1 {
-  margin-bottom: 15px;
-}
-</style>
