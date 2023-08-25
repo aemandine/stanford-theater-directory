@@ -8,7 +8,7 @@ export default {
     "Set Designer", "Prop Master", "Writer", "Deviser", "Dramaturg",
     "Music Director", "Vocal Director", "Orchestra", "Board Operator",
     "Hair and Makeup", "General Run Crew", "Musical Improvisor", "Musician",
-    "Singer", "Composer"
+    "Singer/Vocalist", "Composer"
   ].sort(),
   MUSICAL_ROLES: ["Musical Improvisor", "Orchestra", "Musician"],
   INSTRUMENTS: [

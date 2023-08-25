@@ -140,7 +140,7 @@
       </div>
     </div>
     <v-virtual-scroll
-      :height="300"
+      height="60vh"
       :items="filteredUsers"
     >
       <template v-slot:default="{ item }">
