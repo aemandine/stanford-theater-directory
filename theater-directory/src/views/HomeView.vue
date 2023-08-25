@@ -1,17 +1,63 @@
 <template>
   <main>
-    <h1>This is home</h1>
-    <Suspense>
-    <template #default>
-      <TheLogin />
-    </template>
-    <template #fallback>
-      Loading login...
-    </template>
-    </Suspense>
+    <div class="home">
+      <div class="left">
+        <h2>Welcome to the unofficial theater directory!</h2>
+        <Suspense>
+        <template #default>
+          <TheLogin />
+        </template>
+        <template #fallback>
+          Loading login...
+        </template>
+        </Suspense>
+        <HomeInfo />
+      </div>
+      <iframe src="https://calendar.google.com/calendar/embed?src=1b8d89b4f204f19c4a8478e67ee9987f5cda36d3c6e00aec16854de52c8c94f5%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="800" height="550" frameborder="0" scrolling="yes"></iframe>
+    </div>
   </main>
 </template>
 
+<style scoped>
+.home {
+  margin: 30px 20px;
+  font-weight: bold;
+  color: var(--color-text);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 50px;
+}
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  max-width: 475px;
+}
+.info {
+  margin-top: 20px;
+  width: 100%;
+}
+h2 {
+  margin-top: 0px;
+  text-align: center;
+}
+@media (max-width: 800px) {
+  .home {
+    margin: 20px auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  iframe {
+    display: none;
+  }
+}
+</style>
+
 <script setup lang="ts">
 import TheLogin from '@/components/TheLogin.vue'
+import HomeInfo from '@/components/HomeInfo.vue'
 </script>

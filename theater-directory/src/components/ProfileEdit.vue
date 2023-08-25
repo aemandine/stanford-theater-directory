@@ -5,7 +5,7 @@
       v-if="userInfo.id"
     >
       <v-alert
-          color="var(--vt-c-purple-light)"
+          color="var(--vt-c-red-light)"
           icon="$warning"
           title="Note on privacy"
           text="All the information on your profile is public to anyone with a stanford.edu email. Also, I don't
@@ -80,7 +80,7 @@
       <br/>
       <div class="button">
         <v-btn
-          color="var(--vt-c-purple-light)"
+          color="var(--vt-c-red-light)"
           @click="setUserInfo(myId ?? '', userInfo)"
           :loading="midSave"
         >
@@ -88,6 +88,7 @@
         </v-btn>
       </div>
     </v-form>
+    <p v-else>Could not load your profile.</p>
   </div>
 </template>
 
@@ -159,7 +160,7 @@ export default {
     const myId = loginMethods.methods.getUserId()
     if (myId) {
       var fetchedUserInfo = await getUserInfo(myId)
-      //var fetchedUserInfo = { "id": "0f1a255c-31e9-48c7-9b9e-f713718f085f", "name": "Anna Grelooze McSchmooze", "graduationYear": 2025, "accountEmail": "amist@stanford.edu", "waysToLearn": ["Assistant role", "Workshop"], "personalEmail": "amist@gmail.com", "rolesOfInterest": [ "Producer", "Actor", "Writer", "Deviser", "Run Crew", "Orchestra" ], "rolesToLearn": [ "Intimacy Director", "Actor", "Board Operator", "Hair and Makeup" ], "instruments": [ "Cymbals" ], "notes": "Producer for Circle Mirror Transformation, Assistant Director for 106, Actor in LINES" }
+      //fetchedUserInfo = { "id": "0f1a255c-31e9-48c7-9b9e-f713718f085f", "name": "Anna Grelooze McSchmooze", "graduationYear": 2025, "accountEmail": "amist@stanford.edu", "waysToLearn": ["Assistant role", "Workshop"], "personalEmail": "amist@gmail.com", "rolesOfInterest": [ "Producer", "Actor", "Writer", "Deviser", "Run Crew", "Orchestra" ], "rolesToLearn": [ "Intimacy Director", "Actor", "Board Operator", "Hair and Makeup" ], "instruments": [ "Cymbals" ], "notes": "Producer for Circle Mirror Transformation, Assistant Director for 106, Actor in LINES" }
       if (!fetchedUserInfo.hasOwnProperty("error") && fetchedUserInfo.id === myId) {
         userInfo.value = fetchedUserInfo
       }

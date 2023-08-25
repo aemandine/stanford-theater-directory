@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import loginMethods from './helpers/login-methods'
-//document.cookie = "userId=0f1a255c-31e9-48c7-9b9e-f713718f085f" // Remove later
+document.cookie = "userId=0f1a255c-31e9-48c7-9b9e-f713718f085f" // Remove later
 </script>
 
 <template>
   <header>
-    <h1>Stanford Unofficial Theater Directory</h1>
+    <h1>Campus Unofficial Theater Directory</h1>
     <nav>
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/roles">Browse Roles</RouterLink>
@@ -27,7 +27,8 @@ header {
   align-items: center;
   text-align: center;
   padding: 12px 20px;
-  background-color: var(--color-background-mute);
+  color: var(--vt-c-white-mute);
+  background-color: rgb(140, 21, 21);
 }
 
 h1 {
@@ -43,7 +44,7 @@ nav {
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  color: var(--vt-c-white-mute);
 }
 
 nav a.router-link-exact-active:hover {
@@ -53,7 +54,7 @@ nav a.router-link-exact-active:hover {
 nav a {
   display: inline-block;
   padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  border-left: 1px solid var(--vt-c-red-light);
 }
 
 nav a:first-of-type {
@@ -64,7 +65,6 @@ nav a:first-of-type {
   header {
     height: auto;
     width: 100%;
-    background-color: var(--color-background-mute);
 
     display: flex;
     flex-direction: column;

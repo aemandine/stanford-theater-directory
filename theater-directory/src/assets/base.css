@@ -20,8 +20,8 @@
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 
-  --vt-c-purple-light: rgba(120, 103, 199);
-  --vt-c-purple-dark: rgb(51, 39, 104);
+  --vt-c-red-light: #dd5769;
+  --vt-c-red-dark: #820000;
 }
 
 /* semantic color variables for this project */
@@ -38,8 +38,8 @@
 
   --section-gap: 160px;
 
-  --color-purple-foreground: var(--vt-c-purple-dark);
-  --color-purple-background: var(--vt-c-purple-light);
+  --color-red-foreground: var(--vt-c-red-dark);
+  --color-red-background: var(--vt-c-red-light);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -54,8 +54,8 @@
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-2);
 
-    --color-purple-foreground: var(--vt-c-purple-light);
-    --color-purple-background: var(--vt-c-purple-dark);
+    --color-red-foreground: var(--vt-c-red-light);
+    --color-red-background: var(--vt-c-red-dark);
   }
 }
 

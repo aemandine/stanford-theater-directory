@@ -6,16 +6,20 @@
   font-weight: normal;
 }
 
+body {
+  background-color: var(--color-background-soft)
+}
+
 a,
 .green {
   text-decoration: none;
-  color: rgba(120, 103, 199, 0.8);
+  color: var(--vt-c-red-light);
   transition: 0.4s;
 }
 
 @media (hover: hover) {
   a:hover {
-    background-color: rgba(120, 103, 199, 0.2);
+    background-color: #b83a4b73
   }
 }
 
