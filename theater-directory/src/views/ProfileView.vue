@@ -9,7 +9,7 @@ export default {
   },
   setup(props) {
     const userId = props.id ?? ""
-     // If the userId is empty or our own ID, we can edit
+     // If the userId is empty, we can edit (think about own ID)
     const edit = userId.length == 0 || userId == loginMethods.methods.getUserId()
     return {
       userId, 

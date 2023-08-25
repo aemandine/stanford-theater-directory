@@ -1,13 +1,15 @@
 <template>
   <div class="login">
+    <v-divider v-if="loginMethods.methods.isLoggedIn()"></v-divider>
     <!-- Enter email -->
     <v-sheet 
-      v-if="!sentCode"
+      v-if="!loginMethods.methods.isLoggedIn()"
       class="pa-6 rounded-lg"
       elevation=6
       >
       <h1>Login</h1>
       <v-form 
+        v-if="!sentCode"
         validate-on="input" 
         @submit.prevent="sendEmail"
         >
@@ -26,17 +28,10 @@
           Send me a login code
         </v-btn>
       </v-form>
-    </v-sheet>
-    
-    <!-- Enter code -->
-    <v-sheet 
-      v-if="sentCode"
-      class="pa-6 rounded-lg"
-      elevation=6
-    >
-      <h1>Login</h1>
+      <!-- Enter code -->
       <v-form
-        @submit.prevent=""
+        v-if="sentCode"
+        @submit.prevent="attemptLogin"
         validate-on="input" 
         >
         <v-text-field
@@ -50,6 +45,7 @@
           type="submit" 
           class="w-100 mb-2"
           :disabled="isValidCode(code) !== true"
+          :loading="loading"
           >
           Log in
         </v-btn>
@@ -84,14 +80,16 @@ h1 {
 
 <script lang="ts">
 import { ref } from 'vue'
+import loginMethods from '@/helpers/login-methods'
 
 const email = ref("")
 const code = ref("")
 const sentCode = ref(false)
+const loading = ref(false)
 
 const sendEmail = async() => {
   if (isValidEmail(email.value) === true) { // Patchy and annoying!! Should be auto blocked by @submit.prevent
-    const response = await fetch(`/api/sendCode/${email.value}`)
+    const response = await fetch(`/api/auth/send/${email.value}`)
     sentCode.value = true
   }
 }
@@ -101,6 +99,25 @@ const isValidEmail = (email: string) => {
   const valid = /^[a-zA-Z0-9_\-\.]*$/.test(email)
   if (!valid) return "Your email contains invalid characters."
   return true
+}
+const attemptLogin = async() => {
+  loading.value = true
+  const resp = await fetch(`/api/auth/login`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ email: `${email.value}@stanford.edu`, code: code.value })
+  })
+  code.value = ""
+  if (resp.status === 200) {
+    email.value = ""
+    const { userId } = await resp.json()
+    document.cookie = `userId=${userId}`
+    location.reload()
+    sentCode.value = false
+  } else {
+    alert("Login failed. Please try again!")
+  }
+  loading.value = false
 }
 const isValidCode = (code: string) => {
   if (code.length < 6) return "Please enter all six digits."
@@ -114,11 +131,14 @@ export default {
   async setup() {
     return {
       sendEmail,
+      attemptLogin,
       sentCode,
       code,
+      loading,
       email,
       isValidEmail,
-      isValidCode
+      isValidCode,
+      loginMethods
     }
   }
 }

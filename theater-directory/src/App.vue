@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import loginMethods from './helpers/login-methods'
-document.cookie = "userId=0f1a255c-31e9-48c7-9b9e-f713718f085f" // Remove later
 </script>
 
 <template>
@@ -10,8 +9,8 @@ document.cookie = "userId=0f1a255c-31e9-48c7-9b9e-f713718f085f" // Remove later
     <nav>
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/roles">Browse Roles</RouterLink>
-      <RouterLink to="/directory" v-if="loginMethods.methods.getUserId()">Browse Directory</RouterLink>
-      <RouterLink to="/profile" v-if="loginMethods.methods.getUserId()">My Profile</RouterLink>
+      <RouterLink to="/directory" v-if="loginMethods.methods.isLoggedIn()">Browse Directory</RouterLink>
+      <RouterLink to="/profile" v-if="loginMethods.methods.isLoggedIn()">My Profile</RouterLink>
     </nav>
   </header>
 

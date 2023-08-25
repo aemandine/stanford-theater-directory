@@ -180,7 +180,7 @@
               <i>{{ role }}</i>
             </v-chip>
           </template>
-          <template #graduationYear>{{ item.graduationYear }}</template>
+          <template #graduationYear>{{ item.graduationYear === 0 ? "" : item.graduationYear }}</template>
           <template #email>{{ item.accountEmail }}</template>
           <template #notes>{{ item.notes }}</template>
           <template #tags v-if="Categories.MUSICAL_ROLES.includes(filters.role)">
@@ -272,9 +272,6 @@ const sortBy = (property: string) => {
 }
 
 export default {
-  props: {
-    userId: String
-  },
   components: {
     DirectoryRow, DirectoryInstructions
   },

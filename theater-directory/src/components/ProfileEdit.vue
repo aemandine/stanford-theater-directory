@@ -81,7 +81,7 @@
       <div class="button">
         <v-btn
           color="var(--vt-c-red-light)"
-          @click="setUserInfo(myId ?? '', userInfo)"
+          @click="setUserInfo(userId ?? '', userInfo)"
           :loading="midSave"
         >
         <p class="font-weight-bold text-white">Save</p>
@@ -157,11 +157,11 @@ const setUserInfo = async(id: string, userInfo: UserInfo) => {
 
 export default {
   async setup(props) {
-    const myId = loginMethods.methods.getUserId()
-    if (myId) {
-      var fetchedUserInfo = await getUserInfo(myId)
+    const userId = loginMethods.methods.getUserId()
+    if (userId) {
+      var fetchedUserInfo = await getUserInfo(userId)
       //fetchedUserInfo = { "id": "0f1a255c-31e9-48c7-9b9e-f713718f085f", "name": "Anna Grelooze McSchmooze", "graduationYear": 2025, "accountEmail": "amist@stanford.edu", "waysToLearn": ["Assistant role", "Workshop"], "personalEmail": "amist@gmail.com", "rolesOfInterest": [ "Producer", "Actor", "Writer", "Deviser", "Run Crew", "Orchestra" ], "rolesToLearn": [ "Intimacy Director", "Actor", "Board Operator", "Hair and Makeup" ], "instruments": [ "Cymbals" ], "notes": "Producer for Circle Mirror Transformation, Assistant Director for 106, Actor in LINES" }
-      if (!fetchedUserInfo.hasOwnProperty("error") && fetchedUserInfo.id === myId) {
+      if (!fetchedUserInfo.hasOwnProperty("error") && fetchedUserInfo.id === userId) {
         userInfo.value = fetchedUserInfo
       }
     }
@@ -169,7 +169,7 @@ export default {
       userInfo,
       Categories,
       midSave,
-      myId,
+      userId,
       setUserInfo
     }
   }

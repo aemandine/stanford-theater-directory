@@ -21,7 +21,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   // Get our email address now that we trust it
-  const email = `${context.params.email}@stanford.edu`
+  const email = `${context.params.email.toLowerCase()}@stanford.edu`
   
   // Prevent spamming (in the future we can has, but right now I want to check for spam)
   const loginString = await context.env.LOGINS.get(email)
@@ -47,8 +47,6 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   var newCodeArray = new Uint16Array(6)
   crypto.getRandomValues(newCodeArray) // Get six random numbers
   const newCode = newCodeArray.map((n) => n%10).join("")
-
-  // TODO: get the hash
   const newCodeHash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(newCode))
 
   const newInfo: LoginInfo = {

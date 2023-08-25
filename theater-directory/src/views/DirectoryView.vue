@@ -4,6 +4,7 @@ import loginMethods from "@/helpers/login-methods"
 export default {
   setup() {
     return {
+      loggedIn: loginMethods.methods.isLoggedIn(),
       userId: loginMethods.methods.getUserId()
     }
   },
@@ -16,9 +17,9 @@ export default {
 <template>
   <main>
     <h1>Directory</h1>
-    <Suspense v-if="userId !== null">
+    <Suspense v-if="loggedIn">
       <template #default>
-        <Directory :userId="userId" />
+        <Directory />
       </template>
       <template #fallback>
         <p>Loading directory...</p>
