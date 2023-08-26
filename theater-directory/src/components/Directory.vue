@@ -1,5 +1,6 @@
 <template>
-  <div class="directory">
+  <div class="directory" v-if="loggedIn">
+    <h1>Directory</h1>
     <DirectoryInstructions/>
     <div class="search">
       <h2>Display all users who</h2>
@@ -226,6 +227,9 @@ h2 {
 h3 {
   margin-top: 20px;
 }
+h1 {
+  margin-bottom: 15px;
+}
 @media (max-width: 800px) {
   .search {
     display: block;
@@ -245,20 +249,13 @@ import { UserInfo, Filters, InterestLevel } from '@/helpers/classes'
 import DirectoryRow from '@/components/DirectoryRow.vue'
 import DirectoryInstructions from '@/components/DirectoryInstructions.vue'
 import Categories from '@/helpers/categories'
+import { getUsers } from '@/helpers/api'
 
-// Refs
+// Refs and variables
 const filters = ref(new Filters())
+var allUsers: UserInfo[]
 
 // Functions
-// Gets the list of all users
-const getUsers = async() => {
-  try {
-    const { allUsers } = await (await fetch(`/api/users`)).json()
-    return allUsers
-  } catch {
-    return []
-  }
-}
 // Updates how the directory is sorted
 const sortBy = (property: string) => {
   const oldSort = filters.value.sortBy
@@ -270,88 +267,93 @@ const sortBy = (property: string) => {
     filters.value.sortReversed = false
   }
 }
+const filteredUsers = computed(() => {
+  var filtered: UserInfo[] = JSON.parse(JSON.stringify(allUsers)) // Deep copy
+  if (filters.value.hasFilter()) {
+    // Filter it
+    filtered = filtered.filter((userInfo: UserInfo) => {
+      const newFilters = filters.value
+
+      // Don't have filters for things you can't see
+      if (!newFilters.interestLevels.includes(InterestLevel.WantToLearn)) {
+        newFilters.learningStyles = []
+      }
+      if (!Categories.MUSICAL_ROLES.includes(newFilters.role)) {
+        newFilters.instruments = []
+      }
+
+      var matchingInterestLevelForRole = false
+      // If there are no instruments or learning styles to filter for, auto-true
+      var matchingLearningStyle = newFilters.learningStyles.length == 0 ? true : false
+      var matchingInstrument = newFilters.instruments.length == 0 ? true : false
+
+      // We want someone who is interested
+      if (newFilters.interestLevels.includes(InterestLevel.Interested)) {
+        // They are interested
+        if (userInfo.rolesOfInterest.includes(newFilters.role)) {
+          matchingInterestLevelForRole = true
+          matchingLearningStyle = true // If we're already looking for interested people, don't focus on learning style
+        }
+      }
+      // If we want someone who wants to learn
+      if (newFilters.interestLevels.includes(InterestLevel.WantToLearn)) {
+        // They want to learn
+        if (userInfo.rolesToLearn.includes(newFilters.role)) {
+          matchingInterestLevelForRole = true
+        }
+        // Check against each learning style
+        newFilters.learningStyles.forEach((style) => {
+          if (userInfo.waysToLearn.includes(style)) {
+            matchingLearningStyle = true
+          }
+        })
+      }
+      // If we want a musical person
+      if (Categories.MUSICAL_ROLES.includes(newFilters.role)) {
+        newFilters.instruments.forEach((instrument) => {
+          if (userInfo.instruments.includes(instrument)) {
+            matchingInstrument = true
+          }
+        })
+      }
+
+      return matchingInterestLevelForRole && matchingLearningStyle && matchingInstrument
+    })
+  }
+  // Sort it
+  if (filters.value.sortBy in UserInfo) {
+    filtered.sort((a, b) => (a[filters.value.sortBy as keyof UserInfo] > b[filters.value.sortBy as keyof UserInfo] ? 1 : -1))
+  }
+  // Reverse if it's the years because numbers and strings are different
+  if (filters.value.sortBy === "graduationYear") {
+    filtered.reverse()
+  }
+  // Reverse if necessary
+  if (filters.value.sortReversed) {
+    filtered.reverse()
+  }
+  return filtered
+})
 
 export default {
   components: {
     DirectoryRow, DirectoryInstructions
   },
   async setup(props) {
-    const allUsers: UserInfo[] = await getUsers()
-    //var allUsers = [ { "id": "0f1a255c-31e9-48c7-9b9e-f713718f085f", "name": "Anna Grelooze McSchmooze", "graduationYear": 2025, "accountEmail": "amist@stanford.edu", "waysToLearn": ["Assistant role", "Workshop"], "personalEmail": "amist@gmail.com", "rolesOfInterest": [ "Producer", "Actor", "Writer", "Deviser", "Run Crew", "Orchestra" ], "rolesToLearn": [ "Intimacy Director", "Actor", "Board Operator", "Hair and Makeup" ], "instruments": [ "Cymbals" ], "notes": "Producer for Circle Mirror Transformation, Assistant Director for 106, Actor in LINES" }, { "id": "992b22ca-2c91-4cc7-983d-c61f86c00e59", "name": "Jayda A", "graduationYear": 2024, "accountEmail": "jayda@stanford.edu", "waysToLearn": ["Workshop", "Casual 1-on-1 with student"], "personalEmail": "jayda@gmail.com", "rolesOfInterest": [ "Director", "Actor", "Orchestra" ], "rolesToLearn": [ "Intimacy Director", "Board Operator", "Hair and Makeup" ], "instruments": [ "Horn" ], "notes": "She does it all!" } ]      
-    const filteredUsers = computed(() => {
-      var filtered: UserInfo[] = JSON.parse(JSON.stringify(allUsers)) // Deep copy
-      if (filters.value.hasFilter()) {
-        // Filter it
-        filtered = filtered.filter((userInfo: UserInfo) => {
-          const newFilters = filters.value
-
-          // Don't have filters for things you can't see
-          if (!newFilters.interestLevels.includes(InterestLevel.WantToLearn)) {
-            newFilters.learningStyles = []
-          }
-          if (!Categories.MUSICAL_ROLES.includes(newFilters.role)) {
-            newFilters.instruments = []
-          }
-
-          var matchingInterestLevelForRole = false
-          // If there are no instruments or learning styles to filter for, auto-true
-          var matchingLearningStyle = newFilters.learningStyles.length == 0 ? true : false
-          var matchingInstrument = newFilters.instruments.length == 0 ? true : false
-
-          // We want someone who is interested
-          if (newFilters.interestLevels.includes(InterestLevel.Interested)) {
-            // They are interested
-            if (userInfo.rolesOfInterest.includes(newFilters.role)) {
-              matchingInterestLevelForRole = true
-              matchingLearningStyle = true // If we're already looking for interested people, don't focus on learning style
-            }
-          }
-          // If we want someone who wants to learn
-          if (newFilters.interestLevels.includes(InterestLevel.WantToLearn)) {
-            // They want to learn
-            if (userInfo.rolesToLearn.includes(newFilters.role)) {
-              matchingInterestLevelForRole = true
-            }
-            // Check against each learning style
-            newFilters.learningStyles.forEach((style) => {
-              if (userInfo.waysToLearn.includes(style)) {
-                matchingLearningStyle = true
-              }
-            })
-          }
-          // If we want a musical person
-          if (Categories.MUSICAL_ROLES.includes(newFilters.role)) {
-            newFilters.instruments.forEach((instrument) => {
-              if (userInfo.instruments.includes(instrument)) {
-                matchingInstrument = true
-              }
-            })
-          }
-
-          return matchingInterestLevelForRole && matchingLearningStyle && matchingInstrument
-        })
-      }
-      // Sort it
-      if (filters.value.sortBy in UserInfo) {
-        filtered.sort((a, b) => (a[filters.value.sortBy as keyof UserInfo] > b[filters.value.sortBy as keyof UserInfo] ? 1 : -1))
-      }
-      // Reverse if it's the years because numbers and strings are different
-      if (filters.value.sortBy === "graduationYear") {
-        filtered.reverse()
-      }
-      // Reverse if necessary
-      if (filters.value.sortReversed) {
-        filtered.reverse()
-      }
-      return filtered
-    })
+    const verifyResponse = await fetch("/api/auth/verify")
+    var loggedIn = false
+    if (verifyResponse.status === 200) {
+      loggedIn = true
+      allUsers = await getUsers()
+    }
     return {
+      loggedIn,
       Categories,
       InterestLevel,
       filters,
       filteredUsers,
       allUsers,
-      sortBy
+      sortBy,
     }
   }
 }

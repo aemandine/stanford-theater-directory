@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import loginMethods from './helpers/login-methods'
+import TheNav from '@/components/TheNav.vue'
 </script>
 
 <template>
   <header>
     <h1>Campus Unofficial Theater Directory</h1>
-    <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/roles">Browse Roles</RouterLink>
-      <RouterLink to="/directory" v-if="loginMethods.methods.isLoggedIn()">Browse Directory</RouterLink>
-      <RouterLink to="/profile" v-if="loginMethods.methods.isLoggedIn()">My Profile</RouterLink>
-    </nav>
+    <Suspense>
+      <template #default>
+        <TheNav />
+      </template>
+      <template #fallback>
+        <RouterLink to="/">Home</RouterLink>
+      </template>
+    </Suspense>
   </header>
 
   <RouterView />

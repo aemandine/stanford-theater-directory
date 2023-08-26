@@ -6,11 +6,11 @@ export default {
     "Choreographer (Other)", "Lighting Designer", "Sound Designer",
     "Multimedia/Projections Designer", "Graphic Designer", "Costume Designer",
     "Set Designer", "Prop Master", "Writer", "Deviser", "Dramaturg",
-    "Music Director", "Vocal Director", "Orchestra", "Board Operator",
+    "Music Director", "Vocal Director", "Board Operator",
     "Hair and Makeup", "General Run Crew", "Musical Improvisor", "Musician",
     "Singer/Vocalist", "Composer"
   ].sort(),
-  MUSICAL_ROLES: ["Musical Improvisor", "Orchestra", "Musician"],
+  MUSICAL_ROLES: ["Musical Improvisor", "Musician"],
   INSTRUMENTS: [
     "Accordion",
     "Guitar (acoustic)",

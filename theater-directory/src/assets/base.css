@@ -22,6 +22,9 @@
 
   --vt-c-red-light: #dd5769;
   --vt-c-red-dark: #820000;
+
+  --vt-c-purple-light: #b766df;
+  --vt-c-purple-dark: rgb(97, 38, 126);
 }
 
 /* semantic color variables for this project */
@@ -40,6 +43,9 @@
 
   --color-red-foreground: var(--vt-c-red-dark);
   --color-red-background: var(--vt-c-red-light);
+
+  --color-purple-foreground: var(--vt-c-purple-dark);
+  --color-purple-background: var(--vt-c-purple-light);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -56,6 +62,9 @@
 
     --color-red-foreground: var(--vt-c-red-light);
     --color-red-background: var(--vt-c-red-dark);
+
+    --color-purple-foreground: var(--vt-c-purple-light);
+    --color-purple-background: var(--vt-c-purple-dark);
   }
 }
 

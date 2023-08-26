@@ -1,19 +1,14 @@
 <script lang="ts">
-import ProfileEdit from "@/components/ProfileEdit.vue"
 import Profile from "@/components/Profile.vue"
-import loginMethods from "@/helpers/login-methods"
 export default {
   props: ['id'],
   components: {
-    ProfileEdit, Profile
+    Profile
   },
   setup(props) {
-    const userId = props.id ?? ""
-     // If the userId is empty, we can edit (think about own ID)
-    const edit = userId.length == 0 || userId == loginMethods.methods.getUserId()
+    const profileUserId = props.id ?? ""
     return {
-      userId, 
-      edit
+      profileUserId
     }
   }
 }
@@ -21,20 +16,9 @@ export default {
 
 <template>
   <main>
-    <!-- Editing my own profile -->
-    <Suspense v-if="edit">
+    <Suspense>
       <template #default>
-        <ProfileEdit />
-      </template>
-      <template #fallback>
-        <p>Loading your profile...</p>
-      </template>
-    </Suspense>
-
-    <!-- Viewing someone else's profile -->
-    <Suspense v-else>
-      <template #default>
-        <Profile :userId="userId" />
+        <Profile :profileUserId="profileUserId" />
       </template>
       <template #fallback>
         <p>Loading profile...</p>

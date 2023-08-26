@@ -3,13 +3,23 @@ interface Env {
   SESSIONS: KVNamespace
 }
 
+const parseCookie = (cookieName: string, allCookies: string) => {
+  const cookiePrefix = cookieName + "="
+  var decodedCookie = decodeURIComponent(allCookies)
+  var cookies = decodedCookie.split(";")
+  for (var i = 0; i < cookies.length; i += 1) {
+    const cookie = cookies[i].trim()
+    if (cookie.startsWith(cookiePrefix) && cookie !== cookiePrefix) {
+      return cookie.substring(cookiePrefix.length)
+    }
+  }
+  return null
+}
+
 export const onRequest: PagesFunction<Env> = async (context) => {
   // Look up the session ID
-  if (!context.request.headers.has("Authorization")) {
-    return new Response(null, { status: 401 })
-  }
-  const sessionId = context.request.headers.get("Authorization")
-  if (sessionId.length === 0) {
+  const sessionId = parseCookie("session", context.request.headers.get("Cookie") || "")
+  if (!sessionId) {
     return new Response(null, { status: 401 })
   }
 
@@ -18,7 +28,10 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   try {
     const sessionHash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(sessionId))
     const userId = await context.env.SESSIONS.get(new TextDecoder("utf-8").decode(sessionHash))
-    return Response.json({ userId })
+    if (userId === null) {
+      new Response(null, { status: 401 })
+    }
+    return new Response(JSON.stringify({ userId }), { status: 200 })
   } catch (e) {
     return new Response(null, { status: 500 })
   }

@@ -1,9 +1,9 @@
 <template>
   <div class="login">
-    <v-divider v-if="loginMethods.methods.isLoggedIn()"></v-divider>
+    <v-divider v-if="loggedIn"></v-divider>
     <!-- Enter email -->
     <v-sheet 
-      v-if="!loginMethods.methods.isLoggedIn()"
+      v-if="!loggedIn"
       class="pa-6 rounded-lg"
       elevation=6
       >
@@ -80,7 +80,7 @@ h1 {
 
 <script lang="ts">
 import { ref } from 'vue'
-import loginMethods from '@/helpers/login-methods'
+import router from '@/router'
 
 const email = ref("")
 const code = ref("")
@@ -102,7 +102,7 @@ const isValidEmail = (email: string) => {
 }
 const attemptLogin = async() => {
   loading.value = true
-  const resp = await fetch(`/api/auth/login`, {
+  const resp = await fetch("/api/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ email: `${email.value}@stanford.edu`, code: code.value })
@@ -112,8 +112,8 @@ const attemptLogin = async() => {
     email.value = ""
     const { userId } = await resp.json()
     document.cookie = `userId=${userId}`
-    location.reload()
     sentCode.value = false
+    router.push("/profile")
   } else {
     alert("Login failed. Please try again!")
   }
@@ -129,6 +129,11 @@ export default {
     codeRules: [ isValidCode ]
   }),
   async setup() {
+    const verifyResponse = await fetch("/api/auth/verify")
+    var loggedIn = false
+    if (verifyResponse.status === 200) {
+      loggedIn = true
+    }
     return {
       sendEmail,
       attemptLogin,
@@ -138,7 +143,7 @@ export default {
       email,
       isValidEmail,
       isValidCode,
-      loginMethods
+      loggedIn
     }
   }
 }

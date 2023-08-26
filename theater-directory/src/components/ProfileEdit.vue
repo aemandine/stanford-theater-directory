@@ -3,9 +3,10 @@
     <h1>Your Profile</h1>
     <v-form
       v-if="userInfo.id"
+      @submit.prevent="setUserInfo(userInfo.id, userInfo, midSave)"
     >
       <v-alert
-          color="var(--vt-c-red-light)"
+          color="var(--vt-c-purple-light)"
           icon="$warning"
           title="Note on privacy"
           text="All the information on your profile is public to anyone with a stanford.edu email. Also, I don't
@@ -34,6 +35,15 @@
       <h2>Your interests</h2>
       <h3>Wondering what any of these roles are? Check out
         our <a href="/roles" target="_blank">role descriptions</a>!</h3>
+        <v-alert
+          color="var(--vt-c-purple-light)"
+          class="mb-2"
+          icon="mdi-heart"
+          title="What roles are you interested in?"
+          text="List any roles you'd be interested in having -- you don't need any prior experience to 
+          list a role as something you're interested in! We can help connect you to a mentor if you need
+          guidance in the role."
+      ></v-alert>
       <v-autocomplete
         label="What roles are you interested in?"
         v-model="userInfo.rolesOfInterest"
@@ -52,6 +62,14 @@
         :items="Categories.INSTRUMENTS"
         multiple
       ></v-autocomplete>
+      <v-alert
+          color="var(--vt-c-purple-light)"
+          class="mb-2"
+          icon="mdi-chat-question"
+          title="What roles would you like to learn more about?"
+          text="List any roles you want to learn more about (via being an assistant, participating in a workshop, or 
+          chatting with a student in that role). These can include roles you listed above as ones you're interested in having!"
+      ></v-alert>
       <v-autocomplete
         label="What roles would you like to learn more about?"
         v-model="userInfo.rolesToLearn"
@@ -80,8 +98,8 @@
       <br/>
       <div class="button">
         <v-btn
-          color="var(--vt-c-red-light)"
-          @click="setUserInfo(userId ?? '', userInfo)"
+          color="var(--vt-c-purple-light)"
+          type="submit"
           :loading="midSave"
         >
         <p class="font-weight-bold text-white">Save</p>
@@ -93,6 +111,12 @@
 </template>
 
 <style scoped>
+.v-autocomplete :deep(.v-chip) {
+  font-size: 1em;
+}
+a {
+  color: var(--vt-c-purple-light);
+}
 h1 {
   margin-bottom: 20px;
 }
@@ -122,46 +146,20 @@ h1 {
 import { ref } from 'vue'
 import { UserInfo } from '@/helpers/classes'
 import Categories from '@/helpers/categories'
-import loginMethods from "@/helpers/login-methods"
+import { getUserInfo, setUserInfo } from '@/helpers/api'
 
 // Refs
 const userInfo = ref(new UserInfo())
 const midSave = ref(false)
 
-// Functions
-const getUserInfo = async(id: string) => {
-  try {
-    const { userInfo } = await (await fetch(`/api/user/get/${id}`)).json()
-    return userInfo
-  } catch {
-    return { error: "Could not load user info" }
-  }
-}
-const setUserInfo = async(id: string, userInfo: UserInfo) => {
-  // Sort everything into alphabetical order before saving
-  userInfo.rolesOfInterest = userInfo.rolesOfInterest.sort()
-  userInfo.rolesToLearn = userInfo.rolesToLearn.sort()
-  userInfo.instruments = userInfo.instruments.sort()
-  userInfo.waysToLearn = userInfo.waysToLearn.sort()
-  midSave.value = true
-  const headers = {
-    "Content-Type": "application/json"
-  }
-  const resp = await fetch(`/api/user/set/${id}`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(userInfo)
-  })
-  midSave.value = false
-}
-
 export default {
+  props: {
+    userId: String
+  },
   async setup(props) {
-    const userId = loginMethods.methods.getUserId()
-    if (userId) {
-      var fetchedUserInfo = await getUserInfo(userId)
-      //fetchedUserInfo = { "id": "0f1a255c-31e9-48c7-9b9e-f713718f085f", "name": "Anna Grelooze McSchmooze", "graduationYear": 2025, "accountEmail": "amist@stanford.edu", "waysToLearn": ["Assistant role", "Workshop"], "personalEmail": "amist@gmail.com", "rolesOfInterest": [ "Producer", "Actor", "Writer", "Deviser", "Run Crew", "Orchestra" ], "rolesToLearn": [ "Intimacy Director", "Actor", "Board Operator", "Hair and Makeup" ], "instruments": [ "Cymbals" ], "notes": "Producer for Circle Mirror Transformation, Assistant Director for 106, Actor in LINES" }
-      if (!fetchedUserInfo.hasOwnProperty("error") && fetchedUserInfo.id === userId) {
+    if (props.userId) {
+      var fetchedUserInfo = await getUserInfo(props.userId)
+      if (!fetchedUserInfo.hasOwnProperty("error") && fetchedUserInfo.id === props.userId) {
         userInfo.value = fetchedUserInfo
       }
     }
@@ -169,7 +167,6 @@ export default {
       userInfo,
       Categories,
       midSave,
-      userId,
       setUserInfo
     }
   }

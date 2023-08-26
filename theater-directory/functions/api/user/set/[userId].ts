@@ -3,6 +3,11 @@ interface Env {
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
+  const authVerify = await fetch("/api/auth/verify")
+  if (authVerify.status !== 200) {
+    return Response.redirect("https://unofficialtheater.directory/")
+  }
+
   let userId = context.params.userId
   let userInfo = context.request.body
   if (typeof userId !== "string") {
