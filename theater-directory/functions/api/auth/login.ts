@@ -90,9 +90,8 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     await context.env.SESSIONS.put(sessionHashKey, userId, { expirationTtl: 60 * 60 * 24 * 30 })
 
     // Lastly, save the cookie!
-    const twoWeeksFromNow = new Date(now.getTime() + (1000 * 60 * 60 * 24 * 14))
     const headers = {
-      "Set-Cookie": `session=${newSessionId};HttpOnly;Secure;SameSite=Strict;Expires=${twoWeeksFromNow.toUTCString()};Path=/`
+      "Set-Cookie": `session=${newSessionId};HttpOnly;Secure;SameSite=Strict;Path=/`
     }
 
     // Returns the User ID and sets the session ID cookie
