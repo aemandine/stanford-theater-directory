@@ -1,5 +1,5 @@
 <template>
   <main>
-    <h1>This is your roles</h1>
+    <h1>Roles descriptions are still in progress! Come back later:)</h1>
   </main>
 </template>

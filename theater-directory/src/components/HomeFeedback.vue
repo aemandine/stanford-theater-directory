@@ -5,7 +5,7 @@
       class="pa-6 rounded-lg"
       elevation=6
       >
-      <h1>Anonymous feedback</h1>
+      <h1>Anonymous Feedback</h1>
       <v-form @submit.prevent="sendFeedback">
         <v-textarea
           v-model="message"
