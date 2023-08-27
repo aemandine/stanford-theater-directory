@@ -41,7 +41,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     loginAttempt.email = loginAttempt.email.toLowerCase()
     const loginInfoString = await context.env.LOGINS.get(loginAttempt.email)
     if (!loginInfoString) {
-      return new Response(JSON.stringify({ error: "Didn't register login" }), { status: 401 })
+      return new Response(JSON.stringify({ error: "Something went wrong. Try requesting a new code." }), { status: 401 })
     }
     var loginInfo: LoginInfo = JSON.parse(loginInfoString)
 
@@ -56,12 +56,15 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     const codeTimedOut = (now.getTime() - lastLogin >= 1000 * 60 * 10) || (now.getTime() < lastLogin)
 
     if (!correctCode) {
-      return new Response(JSON.stringify({ error: "Failed to log in" }), { status: 401 })
+      return new Response(JSON.stringify({ error: "Incorrect code" }), { status: 401 })
     }
 
     // If the code is already used or timed out, return an error
-    if (codeTimedOut || codeAlreadyUsed) {
-      return new Response(JSON.stringify({ error: "Code timed out or code already used" }), { status: 401 })
+    if (codeTimedOut) {
+      return new Response(JSON.stringify({ error: "Code timed out. Please request a new code." }), { status: 401 })
+    }
+    if (codeAlreadyUsed) {
+      return new Response(JSON.stringify({ error: "You've already used that code. Please request a new one." }), { status: 401 })
     }    
 
     // If the code is correct, reset last correct code
@@ -98,6 +101,6 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     // Returns the User ID and sets the session ID cookie
     return new Response(JSON.stringify({ userId }), { status: 200, headers: headers })
   } catch (e) {
-    return new Response(null, { status: 500 })
+    return new Response(JSON.stringify({ error: "Something went wrong. Try requesting a new code." }), { status: 500 })
   }
 }

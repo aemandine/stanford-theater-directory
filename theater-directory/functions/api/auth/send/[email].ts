@@ -30,7 +30,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   if (loginString !== null) {
     const info: LoginInfo = JSON.parse(loginString)
     const lastLogin = Date.parse(info.lastLoginDate)
-    if (now.getTime() - lastLogin < 1000 * 60 * 2) { // Can only send a new link after 2 minutes
+    if (now.getTime() - lastLogin < 1000 * 60) { // Can only send a new link every minute
       return new Response(null, { status: 425 })
     }
     if (info.unusedCodes > 5 && now.getTime() - lastLogin < 1000 * 60 * 60 * 24) { // Max out at 5 unused codes per day

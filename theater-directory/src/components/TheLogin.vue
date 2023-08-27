@@ -115,7 +115,12 @@ const attemptLogin = async() => {
     location.reload()
     router.push("/profile")
   } else {
-    alert("Login failed. Please try again!")
+    try {
+      const { error } = await resp.json()
+      alert(error)
+    } catch {
+      alert("Something went wrong. Please request a new code.")
+    }
   }
   loading.value = false
 }

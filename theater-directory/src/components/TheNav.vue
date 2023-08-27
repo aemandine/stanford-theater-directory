@@ -23,6 +23,7 @@ const logout = async() => {
     console.log("Could not log you out.")
   }
   router.push("/")
+  location.reload()
 }
 export default {
   async setup() {

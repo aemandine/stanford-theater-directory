@@ -3,7 +3,6 @@ import HomeView from '../views/HomeView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import RolesView from '../views/RolesView.vue'
 import DirectoryView from '../views/DirectoryView.vue'
-import LogoutView from '../views/LogoutView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,11 +27,6 @@ const router = createRouter({
       path: '/directory',
       name: 'directory',
       component: DirectoryView
-    },
-    {
-      path: '/logout',
-      name: 'logout',
-      component: LogoutView
     }
   ]
 })

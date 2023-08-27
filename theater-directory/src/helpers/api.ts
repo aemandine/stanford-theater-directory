@@ -46,9 +46,6 @@ export const setUserInfo = async(id: string, userInfo: UserInfo, midSave?: any) 
   userInfo.rolesToLearn = userInfo.rolesToLearn.sort()
   userInfo.instruments = userInfo.instruments.sort()
   userInfo.waysToLearn = userInfo.waysToLearn.sort()
-  if (midSave) {
-    midSave.value = true
-  }
   const headers = {
     "Content-Type": "application/json"
   }
@@ -57,9 +54,10 @@ export const setUserInfo = async(id: string, userInfo: UserInfo, midSave?: any) 
     headers: headers,
     body: JSON.stringify(userInfo)
   })
-  if (midSave) {
-    midSave.value = false
+  if (resp.status === 200) {
+    return true
   }
+  return false
 }
 
 export const getUsers = async() => {

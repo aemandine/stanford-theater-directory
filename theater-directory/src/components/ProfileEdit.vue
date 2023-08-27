@@ -3,7 +3,7 @@
     <h1>Your Profile</h1>
     <v-form
       v-if="userInfo.id"
-      @submit.prevent="setUserInfo(userInfo.id, userInfo, midSave)"
+      @submit.prevent="saveUserInfo"
     >
       <v-alert
           color="var(--vt-c-purple-light)"
@@ -19,17 +19,20 @@
           label="Name"
           v-model="userInfo.name"
           required
+          v-on:update:model-value="saveButtonText = 'Save'"
         ></v-text-field>
         <v-select 
           label="Grad year" 
           :items="Categories.YEARS"
           v-model="userInfo.graduationYear"
           required
+          v-on:update:model-value="saveButtonText = 'Save'"
         ></v-select>
       </div>
       <v-text-field
         label="Pronouns" 
         v-model="userInfo.pronouns"
+        v-on:update:model-value="saveButtonText = 'Save'"
       ></v-text-field>
       <v-text-field
         label="Email (Stanford)" 
@@ -55,6 +58,7 @@
         closable-chips
         :items="Categories.ROLES"
         multiple
+        v-on:update:model-value="saveButtonText = 'Save'"
       >
       </v-autocomplete>
       <v-autocomplete
@@ -65,6 +69,7 @@
         closable-chips
         :items="Categories.INSTRUMENTS"
         multiple
+        v-on:update:model-value="saveButtonText = 'Save'"
       ></v-autocomplete>
       <v-alert
           color="var(--vt-c-purple-light)"
@@ -81,6 +86,7 @@
         closable-chips
         :items="Categories.ROLES"
         multiple
+        v-on:update:model-value="saveButtonText = 'Save'"
       ></v-autocomplete>
       <v-autocomplete
         label="How would you like to learn more about a role?"
@@ -90,6 +96,7 @@
         closable-chips
         :items="Categories.WAYS_TO_LEARN"
         multiple
+        v-on:update:model-value="saveButtonText = 'Save'"
       ></v-autocomplete>
       <h2>Other information</h2>
       <v-textarea 
@@ -98,15 +105,17 @@
         auto-grow
         hint="Previous theatrical experience is not required!!"
         persistent-hint
+        v-on:update:model-value="saveButtonText = 'Save'"
       ></v-textarea>
       <br/>
       <div class="button">
         <v-btn
           color="var(--vt-c-purple-light)"
           type="submit"
-          :loading="midSave"
+          :loading="loading"
+          :disabled="saveButtonText !== 'Save'"
         >
-        <p class="font-weight-bold text-white">Save</p>
+        <p class="font-weight-bold text-white">{{ saveButtonText }}</p>
         </v-btn>
       </div>
     </v-form>
@@ -151,7 +160,17 @@ import { getUserInfo, setUserInfo } from '@/helpers/api'
 
 // Refs
 const userInfo = ref(new UserInfo())
-const midSave = ref(false)
+const loading = ref(false)
+const saveButtonText = ref("Save")
+
+// Functions
+const saveUserInfo = async() => {
+  loading.value = true
+  if (await setUserInfo(userInfo.value.id, userInfo.value)) {
+    saveButtonText.value = "Saved"
+  }
+  loading.value = false
+}
 
 export default {
   props: {
@@ -164,8 +183,9 @@ export default {
     return {
       userInfo,
       Categories,
-      midSave,
-      setUserInfo
+      loading,
+      saveButtonText,
+      saveUserInfo
     }
   }
 }
