@@ -3,9 +3,17 @@ interface Env {
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  const authVerify = await fetch("/api/auth/verify")
-  if (authVerify.status !== 200) {
-    return Response.redirect("https://unofficialtheater.directory/")
+  try {
+    const authVerify = await fetch(
+      "https://unofficialtheater.directory/api/auth/verify",
+      { headers: context.request.headers }
+      )
+    const { userId }: { userId: string | null } = await authVerify.json()
+    if (userId === null) {
+      return new Response(null, { status: 401 })
+    }
+  } catch {
+    return new Response(null, { status: 500 })
   }
 
   const userList = await context.env.USERS.list()
@@ -13,9 +21,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     try {
       const userInfoString = await context.env.USERS.get(userKey.name)
       return JSON.parse(userInfoString)
-    } catch (e) {
-      console.log("Couldn't get user info")
+    } catch {
+      return new Response(null, { status: 500 })
     }
   }))
-  return Response.json({ allUsers })
+  return new Response(JSON.stringify({ allUsers }), { status: 200 })
 }

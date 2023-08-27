@@ -81,6 +81,7 @@ h1 {
 <script lang="ts">
 import { ref } from 'vue'
 import router from '@/router'
+import { isLoggedIn } from '@/helpers/api'
 
 const email = ref("")
 const code = ref("")
@@ -110,8 +111,6 @@ const attemptLogin = async() => {
   code.value = ""
   if (resp.status === 200) {
     email.value = ""
-    const { userId } = await resp.json()
-    document.cookie = `userId=${userId}`
     sentCode.value = false
     router.push("/profile")
   } else {
@@ -129,11 +128,7 @@ export default {
     codeRules: [ isValidCode ]
   }),
   async setup() {
-    const verifyResponse = await fetch("/api/auth/verify")
-    var loggedIn = false
-    if (verifyResponse.status === 200) {
-      loggedIn = true
-    }
+    const loggedIn = await isLoggedIn()
     return {
       sendEmail,
       attemptLogin,

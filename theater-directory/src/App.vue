@@ -11,15 +11,20 @@ import TheNav from '@/components/TheNav.vue'
         <TheNav />
       </template>
       <template #fallback>
-        <RouterLink to="/">Home</RouterLink>
+        <nav>
+          <RouterLink to="/">Home</RouterLink>
+        </nav>
       </template>
     </Suspense>
   </header>
 
-  <RouterView />
+  <RouterView :key="$route.fullPath" />
 </template>
 
 <style scoped>
+a {
+  color: var(--vt-c-red-light);
+}
 header {
   width: 100%;
   display: flex;
@@ -39,29 +44,6 @@ h1 {
   line-height: 1;
 }
 
-nav {
-  font-size: 14px;
-  text-align: center;
-}
-
-nav a.router-link-exact-active {
-  color: var(--vt-c-white-mute);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--vt-c-red-light);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
 @media (max-width: 800px) {
   header {
     height: auto;
@@ -75,9 +57,6 @@ nav a:first-of-type {
     text-align: center;
     font-size: 20pt;
     margin: 5px;
-  }
-  nav {
-    flex-shrink: 0;
   }
 }
 </style>

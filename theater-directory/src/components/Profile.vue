@@ -1,9 +1,9 @@
 <template>
-  <div v-if="loggedIn">
+  <div v-if="userId !== null">
     <!-- Editing my own profile -->
     <Suspense v-if="edit">
       <template #default>
-        <ProfileEdit :userId="$props.profileUserId" />
+        <ProfileEdit :userId="userId" />
       </template>
       <template #fallback>
         <p>Loading your profile...</p>
@@ -27,6 +27,7 @@
 import ProfileEdit from "@/components/ProfileEdit.vue"
 import ProfileView from "@/components/ProfileView.vue"
 import router from "@/router"
+import { getUserId } from "@/helpers/api"
 
 export default {
   props: {
@@ -36,19 +37,14 @@ export default {
     ProfileEdit, ProfileView
   },
   async setup(props) {
-    const verifyResponse = await fetch("/api/auth/verify")
-    if (verifyResponse.status === 200) {
-      const { userId } = await verifyResponse.json()
-      const edit = (userId === props.profileUserId) || (props.profileUserId === "")
-      return {
-        edit,
-        loggedIn: true
-      }
+    const userId = await getUserId()
+    const edit = (userId === props.profileUserId) || (props.profileUserId === "")
+    if (userId === null) {
+      router.push("/")
     }
-    router.push("/")
     return {
-      edit: false,
-      loggedIn: false
+      edit,
+      userId
     }
   }
 }

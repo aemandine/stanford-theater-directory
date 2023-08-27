@@ -1,5 +1,5 @@
 <template>
-  <div class="directory" v-if="loggedIn">
+  <div class="directory" v-if="allUsers !== null">
     <h1>Directory</h1>
     <DirectoryInstructions/>
     <div class="search">
@@ -249,11 +249,12 @@ import { UserInfo, Filters, InterestLevel } from '@/helpers/classes'
 import DirectoryRow from '@/components/DirectoryRow.vue'
 import DirectoryInstructions from '@/components/DirectoryInstructions.vue'
 import Categories from '@/helpers/categories'
+import router from '@/router'
 import { getUsers } from '@/helpers/api'
 
 // Refs and variables
 const filters = ref(new Filters())
-var allUsers: UserInfo[]
+var allUsers: UserInfo[] | null
 
 // Functions
 // Updates how the directory is sorted
@@ -340,14 +341,11 @@ export default {
     DirectoryRow, DirectoryInstructions
   },
   async setup(props) {
-    const verifyResponse = await fetch("/api/auth/verify")
-    var loggedIn = false
-    if (verifyResponse.status === 200) {
-      loggedIn = true
-      allUsers = await getUsers()
+    allUsers = await getUsers()
+    if (allUsers === null) {
+      router.push("/")
     }
     return {
-      loggedIn,
       Categories,
       InterestLevel,
       filters,

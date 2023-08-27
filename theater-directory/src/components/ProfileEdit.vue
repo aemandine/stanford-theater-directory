@@ -114,9 +114,6 @@
 .v-autocomplete :deep(.v-chip) {
   font-size: 1em;
 }
-a {
-  color: var(--vt-c-purple-light);
-}
 h1 {
   margin-bottom: 20px;
 }
@@ -158,10 +155,7 @@ export default {
   },
   async setup(props) {
     if (props.userId) {
-      var fetchedUserInfo = await getUserInfo(props.userId)
-      if (!fetchedUserInfo.hasOwnProperty("error") && fetchedUserInfo.id === props.userId) {
-        userInfo.value = fetchedUserInfo
-      }
+      userInfo.value = await getUserInfo(props.userId) ?? new UserInfo()
     }
     return {
       userInfo,

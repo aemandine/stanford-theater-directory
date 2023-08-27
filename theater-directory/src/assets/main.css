@@ -10,15 +10,14 @@ body {
   background-color: var(--color-background-soft)
 }
 
-a,
-.green {
+a {
   text-decoration: none;
-  color: var(--vt-c-red-light);
+  color: var(--vt-c-purple-light);
   transition: 0.4s;
 }
 
 @media (hover: hover) {
-  a:hover {
+  nav a:hover {
     background-color: #b83a4b73
   }
 }
@@ -45,4 +44,29 @@ h3 {
   main {
     margin: 20px 10px;
   }
+}
+
+nav {
+  font-size: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+nav a.router-link-exact-active {
+  color: var(--vt-c-white-mute);
+}
+
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0 1rem;
+  border-left: 1px solid var(--vt-c-red-light);
+  color: var(--vt-c-red-light);
+}
+
+nav a:first-of-type {
+  border: 0;
 }

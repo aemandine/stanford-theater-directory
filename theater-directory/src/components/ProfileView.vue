@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <div
-      v-if="userInfo.id"
+      v-if="userInfo !== null"
     >
       <h2>{{ userInfo.name }}</h2>
       <h3>{{ userInfo.accountEmail }}</h3>
@@ -51,7 +51,7 @@
       </div>
       <div 
         class="chips" 
-        v-if="Categories.MUSICAL_ROLES.some(r => userInfo.rolesOfInterest.includes(r)) && userInfo.instruments.length > 0"
+        v-if="Categories.MUSICAL_ROLES.some(r => userInfo!.rolesOfInterest.includes(r)) && userInfo.instruments.length > 0"
       >
         <h2>They play the...</h2>
         <v-chip 
@@ -108,7 +108,7 @@ import { UserInfo } from '@/helpers/classes'
 import Categories from '@/helpers/categories'
 import { getUserInfo} from '@/helpers/api'
 
-var userInfo = new UserInfo()
+var userInfo: UserInfo | null = new UserInfo()
 
 export default {
   props: {
@@ -116,10 +116,7 @@ export default {
   },
   async setup(props) {
     if (props.userId) {
-      var fetchedUserInfo = await getUserInfo(props.userId)
-      if (!fetchedUserInfo.hasOwnProperty("error") && fetchedUserInfo.id === props.userId) {
-        userInfo = fetchedUserInfo
-      }
+      userInfo = await getUserInfo(props.userId)
     }
     return {
       userInfo,

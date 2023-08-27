@@ -1,11 +1,42 @@
 import { UserInfo } from "@/helpers/classes"
 
+export const isLoggedIn = async() => {
+  try {
+    const { userId } = await(await fetch("/api/auth/verify")).json()
+    if (userId !== null) {
+      return true
+    } else {
+      return false
+    }
+  } catch {
+    return false
+  }
+}
+
+export const getUserId = async() => {
+  try {
+    const { userId } = await(await fetch("/api/auth/verify")).json()
+    if (userId !== null) {
+      return userId
+    } else {
+      return null
+    }
+  } catch {
+    return null
+  }
+}
+
 export const getUserInfo = async(id: string) => {
   try {
-    const { userInfo } = await (await fetch(`/api/user/get/${id}`)).json()
-    return userInfo
+    const resp = await fetch(`/api/user/get/${id}`)
+    if (resp.status === 200) {
+      const { userInfo } = await resp.json()
+      return userInfo
+    } else {
+      return null
+    }
   } catch {
-    return { error: "Could not load user info" }
+    return null
   }
 }
 
@@ -33,9 +64,14 @@ export const setUserInfo = async(id: string, userInfo: UserInfo, midSave?: any) 
 
 export const getUsers = async() => {
   try {
-    const { allUsers } = await (await fetch(`/api/users`)).json()
-    return allUsers
+    const resp = await fetch("/api/users")
+    if (resp.status === 200) {
+      const { allUsers } = await resp.json()
+      return allUsers
+    } else {
+      return null
+    }
   } catch {
-    return []
+    return null
   }
 }

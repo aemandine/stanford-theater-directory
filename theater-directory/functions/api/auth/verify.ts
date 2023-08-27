@@ -20,7 +20,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   // Look up the session ID
   const sessionId = parseCookie("session", context.request.headers.get("Cookie") || "")
   if (!sessionId) {
-    return new Response(null, { status: 401 })
+    return Response.json({ userId: null })
   }
 
   // Get the hash of the session ID and look that up
@@ -29,10 +29,10 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     const sessionHash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(sessionId))
     const userId = await context.env.SESSIONS.get(new TextDecoder("utf-8").decode(sessionHash))
     if (userId === null) {
-      new Response(null, { status: 401 })
+      return Response.json({ userId: null })
     }
-    return new Response(JSON.stringify({ userId }), { status: 200 })
+    return Response.json({ userId })
   } catch (e) {
-    return new Response(null, { status: 500 })
+    return Response.json({ userId: null })
   }
 }

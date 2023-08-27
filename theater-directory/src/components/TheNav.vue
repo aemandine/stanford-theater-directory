@@ -3,19 +3,15 @@
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/roles">Browse Roles</RouterLink>
     <RouterLink to="/directory" v-if="loggedIn">Browse Directory</RouterLink>
-    <RouterLink to="/profile" v-if="loggedIn">My Profile</RouterLink>
+    <RouterLink to="/profile/" v-if="loggedIn">My Profile</RouterLink>
   </nav>
 </template>
 
 <script lang="ts">
-
+import { isLoggedIn } from '@/helpers/api'
 export default {
   async setup() {
-    var loggedIn = false
-    const verifyResponse = await fetch("/api/auth/verify")
-    if (verifyResponse.status === 200) {
-      loggedIn = true
-    }
+    const loggedIn = await isLoggedIn()
     return {
       loggedIn
     }
