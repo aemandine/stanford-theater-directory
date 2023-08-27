@@ -5,7 +5,7 @@
       class="pa-6 rounded-lg"
       elevation=6
       >
-      <h1>Anonymous Feedback</h1>
+      <h1>Suggestion Box</h1>
       <v-form @submit.prevent="sendFeedback">
         <v-textarea
           v-model="message"
@@ -16,6 +16,7 @@
         <v-btn 
           type="submit"
           class="w-100"
+          :loading="loading"
           :disabled="message.trim().length === 0"
           > 
           {{ buttonText }}
@@ -45,9 +46,11 @@ import { ref } from 'vue'
 import { isLoggedIn } from '@/helpers/api'
 
 const buttonText = ref("Send Feedback")
+const loading = ref(false)
 const message = ref("")
 
 const sendFeedback = async() => {
+  loading.value = true
   const resp = await fetch("/api/feedback/send", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -57,6 +60,7 @@ const sendFeedback = async() => {
     message.value = ""
     buttonText.value = "Sent"
   }
+  loading.value = false
 }
 export default {
   async setup() {
@@ -64,6 +68,7 @@ export default {
     return {
       loggedIn,
       buttonText,
+      loading,
       message,
       sendFeedback
     }

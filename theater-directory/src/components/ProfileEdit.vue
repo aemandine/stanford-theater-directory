@@ -28,6 +28,10 @@
         ></v-select>
       </div>
       <v-text-field
+        label="Pronouns" 
+        v-model="userInfo.pronouns"
+      ></v-text-field>
+      <v-text-field
         label="Email (Stanford)" 
         v-model="userInfo.accountEmail"
         readonly

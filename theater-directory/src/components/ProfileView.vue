@@ -4,6 +4,7 @@
       v-if="userInfo !== null"
     >
       <h2>{{ userInfo.name }}</h2>
+      <h3>{{ userInfo.pronouns }}</h3>
       <h3>{{ userInfo.accountEmail }}</h3>
       <h3>Class of {{ userInfo.graduationYear }}</h3>
       <div 

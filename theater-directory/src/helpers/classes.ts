@@ -3,6 +3,7 @@ export class UserInfo {
   name: string = ""
   graduationYear: number = 0
   accountEmail: string = ""
+  pronouns: string = ""
   rolesOfInterest: string[] = []
   rolesToLearn: string[] = []
   notes: string = ""

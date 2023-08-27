@@ -112,6 +112,7 @@ const attemptLogin = async() => {
   if (resp.status === 200) {
     email.value = ""
     sentCode.value = false
+    location.reload()
     router.push("/profile")
   } else {
     alert("Login failed. Please try again!")
