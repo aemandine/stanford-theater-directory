@@ -13,6 +13,8 @@
 <style scoped>
 h2, h3 {
   text-align: center;
+  margin-top: 0px;
+  color: var(--color-purple-foreground);
 }
 h2 {
   margin-top: 0px;

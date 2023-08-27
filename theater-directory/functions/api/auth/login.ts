@@ -30,13 +30,13 @@ class UserInfo {
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  // Make sure it's a post request
-  if (context.request.method !== "POST") {
-    return new Response(null, { status: 405 })
-  }
-
   // We are expecting the login code and email
   try {
+    // Make sure it's a post request
+    if (context.request.method !== "POST") {
+      return new Response(null, { status: 405 })
+    }
+    
     const loginAttempt: LoginAttempt = await context.request.json()
     loginAttempt.email = loginAttempt.email.toLowerCase()
     const loginInfoString = await context.env.LOGINS.get(loginAttempt.email)

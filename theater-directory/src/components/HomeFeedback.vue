@@ -29,7 +29,7 @@
 <style scoped>
 h1 {
   font-weight: bold;
-  color: var(--vt-c-red-dark);
+  color: var(--vt-c-purple-light);
   margin-bottom: 10px;
 }
 .feedback {

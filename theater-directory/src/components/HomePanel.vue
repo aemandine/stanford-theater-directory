@@ -28,7 +28,7 @@ h2, h3 {
 }
 h2 {
   margin-top: 0px;
-  color: var(--color-red-foreground);
+  color: var(--vt-c-purple-light);
 }
 .home-panel {
   display: flex;
