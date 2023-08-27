@@ -1,6 +1,5 @@
 <template>
   <div class="login">
-    <v-divider v-if="loggedIn"></v-divider>
     <!-- Enter email -->
     <v-sheet 
       v-if="!loggedIn"
@@ -71,6 +70,7 @@ h1 {
   align-self: center;
   flex-shrink: 0;
   text-align: center;
+  margin-bottom: 20px;
 }
 .centered-input :deep(input) {
   text-align: center;

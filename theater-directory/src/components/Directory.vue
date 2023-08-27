@@ -344,6 +344,9 @@ export default {
     allUsers = await getUsers()
     if (allUsers === null) {
       router.push("/")
+    } else {
+      // Remove anyone without a name
+      allUsers = allUsers.filter((user) => user.name)
     }
     return {
       Categories,

@@ -1,18 +1,14 @@
 <template>
   <main>
     <div class="home">
-      <div class="left">
-        <h2>Welcome to the unofficial theater directory!</h2>
-        <Suspense>
+      <Suspense>
         <template #default>
-          <TheLogin />
+          <HomePanel />
         </template>
         <template #fallback>
-          Loading login...
+          Loading info...
         </template>
-        </Suspense>
-        <HomeInfo />
-      </div>
+      </Suspense>
       <iframe src="https://calendar.google.com/calendar/embed?src=1b8d89b4f204f19c4a8478e67ee9987f5cda36d3c6e00aec16854de52c8c94f5%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="800" height="550" frameborder="0" scrolling="yes"></iframe>
     </div>
   </main>
@@ -28,17 +24,6 @@
   flex-direction: row;
   justify-content: space-around;
   gap: 50px;
-}
-.left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-  max-width: 475px;
-}
-.info {
-  margin-top: 20px;
-  width: 100%;
 }
 h2 {
   margin-top: 0px;
@@ -58,6 +43,5 @@ h2 {
 </style>
 
 <script setup lang="ts">
-import TheLogin from '@/components/TheLogin.vue'
-import HomeInfo from '@/components/HomeInfo.vue'
+import HomePanel from '@/components/HomePanel.vue'
 </script>

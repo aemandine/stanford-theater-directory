@@ -98,6 +98,6 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     // Returns the User ID and sets the session ID cookie
     return new Response(JSON.stringify({ userId }), { status: 200, headers: headers })
   } catch (e) {
-    return new Response(JSON.stringify({ error: e }), { status: 500 })
+    return new Response(null, { status: 500 })
   }
 }

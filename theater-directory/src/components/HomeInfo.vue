@@ -7,7 +7,6 @@
       Are you an artist, musician, or designer seeking a project to work on?
       Then you're in the right place!
     </h3>
-    <h2 id="close">To access the directory and create a profile for yourself, log in above!</h2>
   </div>
 </template>
 
@@ -17,5 +16,8 @@ h2, h3 {
 }
 h2 {
   margin-top: 0px;
+}
+.info {
+  width: 100%;
 }
 </style>
