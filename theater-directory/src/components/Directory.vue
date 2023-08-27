@@ -114,10 +114,10 @@
           </div>
         </template>
         <template #email>
-          <div @click="sortBy('email')">
+          <div @click="sortBy('accountEmail')">
             <b>Email</b>
             <v-icon 
-              v-if="filters.sortBy == 'email' && filters.sortReversed"
+              v-if="filters.sortBy == 'accountEmail' && filters.sortReversed"
               icon="mdi-menu-up" 
               class="pb-1" 
               size="25" >
@@ -126,7 +126,7 @@
               v-else
               icon="mdi-menu-down" 
               class="pb-1" 
-              :class="{notSelected: filters.sortBy != 'email'}"
+              :class="{notSelected: filters.sortBy != 'accountEmail'}"
               size="25" >
             </v-icon>
           </div>
@@ -269,6 +269,7 @@ const sortBy = (property: string) => {
   }
 }
 const filteredUsers = computed(() => {
+  console.log(filters.value)
   var filtered: UserInfo[] = JSON.parse(JSON.stringify(allUsers)) // Deep copy
   if (filters.value.hasFilter()) {
     // Filter it
@@ -322,12 +323,16 @@ const filteredUsers = computed(() => {
     })
   }
   // Sort it
-  if (filters.value.sortBy in UserInfo) {
-    filtered.sort((a, b) => (a[filters.value.sortBy as keyof UserInfo] > b[filters.value.sortBy as keyof UserInfo] ? 1 : -1))
-  }
-  // Reverse if it's the years because numbers and strings are different
-  if (filters.value.sortBy === "graduationYear") {
-    filtered.reverse()
+  switch (filters.value.sortBy) {
+    case "accountEmail":
+      filtered.sort((a, b) => (a["accountEmail"] > b["accountEmail"] ? 1 : -1))
+      break
+    case "name":
+      filtered.sort((a, b) => (a["name"] > b["name"] ? 1 : -1))
+      break;
+    case "graduationYear":
+      filtered.sort((a, b) => (a["graduationYear"] > b["graduationYear"] ? 1 : -1))
+      break
   }
   // Reverse if necessary
   if (filters.value.sortReversed) {
