@@ -27,7 +27,7 @@
 import ProfileEdit from "@/components/ProfileEdit.vue"
 import ProfileView from "@/components/ProfileView.vue"
 import router from "@/router"
-import { getUserId } from "@/helpers/api"
+import { getUserId } from "@/helpers/auth"
 
 export default {
   props: {

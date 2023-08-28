@@ -1,7 +1,6 @@
 <template>
   <div class="feedback">
     <v-sheet 
-      v-if="loggedIn"
       class="pa-6 rounded-lg"
       elevation=6
       >
@@ -43,7 +42,6 @@ h1 {
 
 <script lang="ts">
 import { ref } from 'vue'
-import { isLoggedIn } from '@/helpers/api'
 
 const buttonText = ref("Send Feedback")
 const loading = ref(false)
@@ -63,10 +61,8 @@ const sendFeedback = async() => {
   loading.value = false
 }
 export default {
-  async setup() {
-    const loggedIn = await isLoggedIn()
+  setup() {
     return {
-      loggedIn,
       buttonText,
       loading,
       message,

@@ -1,24 +1,10 @@
 <template>
   <div class="home-panel">
     <h2>Welcome to the unofficial theater directory!</h2>
-    <Suspense v-if="!loggedIn">
-      <template #default>
-        <TheLogin />
-      </template>
-      <template #fallback>
-        Loading login...
-      </template>
-    </Suspense>
+    <TheLogin v-if="!loggedIn" />
     <HomeInfo />
     <h2 v-if="!loggedIn">To access the directory and create a profile for yourself, log in above!</h2>
-    <Suspense v-if="loggedIn">
-      <template #default>
-        <HomeFeedback />
-      </template>
-      <template #fallback>
-        Loading feedback...
-      </template>
-    </Suspense>
+    <HomeFeedback v-if="loggedIn" />
   </div>
 </template>
 
@@ -40,17 +26,17 @@ h2 {
 </style>
 
 <script lang="ts">
-import { isLoggedIn } from '@/helpers/api'
-import TheLogin from '@/components/TheLogin.vue'
-import HomeInfo from '@/components/HomeInfo.vue'
-import HomeFeedback from '@/components/HomeFeedback.vue'
+import TheLogin from "@/components/TheLogin.vue"
+import HomeInfo from "@/components/HomeInfo.vue"
+import HomeFeedback from "@/components/HomeFeedback.vue"
+import { getUserId } from "@/helpers/auth"
 
 export default {
   components: {
     TheLogin, HomeInfo, HomeFeedback
   },
   async setup() {
-    const loggedIn = await isLoggedIn()
+    const loggedIn = (await getUserId()) !== null
     return {
       loggedIn
     }

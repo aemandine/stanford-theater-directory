@@ -16,18 +16,7 @@ interface LoginInfo {
   codeHash: string
 }
 
-class UserInfo {
-  id: string = ""
-  name: string = ""
-  graduationYear: number = 0
-  accountEmail: string = ""
-  pronouns: string = ""
-  rolesOfInterest: string[] = []
-  rolesToLearn: string[] = []
-  notes: string = ""
-  instruments: string[] = []
-  waysToLearn: string[] = []
-}
+import { UserInfo } from '@/helpers/user'
 
 export const onRequest: PagesFunction<Env> = async (context) => {
   // We are expecting the login code and email
@@ -82,9 +71,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     // If their user ID is null, make them a new user profile
     if (userId === null) {
       userId = crypto.randomUUID()
-      var newUserInfo = new UserInfo()
-      newUserInfo.accountEmail = loginAttempt.email
-      newUserInfo.id = userId
+      var newUserInfo: UserInfo = { id: userId, accountEmail: loginAttempt.email }
       await context.env.USERS.put(userId, JSON.stringify(newUserInfo))
       await context.env.IDS.put(loginAttempt.email, userId)
     }

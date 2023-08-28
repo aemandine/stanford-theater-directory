@@ -2,7 +2,7 @@
   <div class="profile">
     <h1>Your Profile</h1>
     <v-form
-      v-if="userInfo.id"
+      v-if="user"
       @submit.prevent="saveUserInfo"
     >
       <v-alert
@@ -17,26 +17,24 @@
       <div id="inline">
         <v-text-field 
           label="Name"
-          v-model="userInfo.name"
-          required
+          v-model="user.name"
           v-on:update:model-value="saveButtonText = 'Save'"
         ></v-text-field>
         <v-select 
           label="Grad year" 
           :items="Categories.YEARS"
-          v-model="userInfo.graduationYear"
-          required
+          v-model="user.graduationYear"
           v-on:update:model-value="saveButtonText = 'Save'"
         ></v-select>
       </div>
       <v-text-field
         label="Pronouns" 
-        v-model="userInfo.pronouns"
+        v-model="user.pronouns"
         v-on:update:model-value="saveButtonText = 'Save'"
       ></v-text-field>
       <v-text-field
         label="Email (Stanford)" 
-        v-model="userInfo.accountEmail"
+        v-model="user.accountEmail"
         readonly
       ></v-text-field>
       <h2>Your interests</h2>
@@ -53,7 +51,7 @@
       ></v-alert>
       <v-autocomplete
         label="What roles are you interested in?"
-        v-model="userInfo.rolesOfInterest"
+        v-model="user.rolesOfInterest"
         chips
         closable-chips
         :items="Categories.ROLES"
@@ -63,8 +61,8 @@
       </v-autocomplete>
       <v-autocomplete
         label="What instruments do you play?"
-        v-model="userInfo.instruments"
-        v-if="userInfo.rolesOfInterest.includes('Orchestra') || userInfo.rolesOfInterest.includes('Musical Improvisor')"
+        v-model="user.instruments"
+        v-if="user.rolesOfInterest?.some(role => Categories.MUSICAL_ROLES.includes(role))"
         chips
         closable-chips
         :items="Categories.INSTRUMENTS"
@@ -81,7 +79,7 @@
       ></v-alert>
       <v-autocomplete
         label="What roles would you like to learn more about?"
-        v-model="userInfo.rolesToLearn"
+        v-model="user.rolesToLearn"
         chips
         closable-chips
         :items="Categories.ROLES"
@@ -90,8 +88,8 @@
       ></v-autocomplete>
       <v-autocomplete
         label="How would you like to learn more about a role?"
-        v-model="userInfo.waysToLearn"
-        v-if="userInfo.rolesToLearn.length > 0"
+        v-model="user.waysToLearn"
+        v-if="user.rolesToLearn?.length"
         chips
         closable-chips
         :items="Categories.WAYS_TO_LEARN"
@@ -101,7 +99,7 @@
       <h2>Other information</h2>
       <v-textarea 
         label="Previous theatrical experience and other notes"
-        v-model="userInfo.notes"
+        v-model="user.notes"
         auto-grow
         hint="Previous theatrical experience is not required!!"
         persistent-hint
@@ -153,20 +151,19 @@ h1 {
 
 <script lang="ts">
 // Imports
-import { ref } from 'vue'
-import { UserInfo } from '@/helpers/classes'
+import { ref, type Ref } from 'vue'
+import { User } from '@/helpers/user'
 import Categories from '@/helpers/categories'
-import { getUserInfo, setUserInfo } from '@/helpers/api'
 
 // Refs
-const userInfo = ref(new UserInfo())
+const user: Ref<User|null> = ref(null)
 const loading = ref(false)
 const saveButtonText = ref("Save")
 
 // Functions
 const saveUserInfo = async() => {
   loading.value = true
-  if (await setUserInfo(userInfo.value.id, userInfo.value)) {
+  if (await user.value?.save()) {
     saveButtonText.value = "Saved"
   }
   loading.value = false
@@ -178,10 +175,10 @@ export default {
   },
   async setup(props) {
     if (props.userId) {
-      userInfo.value = await getUserInfo(props.userId) ?? new UserInfo()
+      user.value = await User.init(props.userId)
     }
     return {
-      userInfo,
+      user,
       Categories,
       loading,
       saveButtonText,

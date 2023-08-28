@@ -1,16 +1,3 @@
-export class UserInfo {
-  id: string = ""
-  name: string = ""
-  graduationYear: number = 0
-  accountEmail: string = ""
-  pronouns: string = ""
-  rolesOfInterest: string[] = []
-  rolesToLearn: string[] = []
-  notes: string = ""
-  instruments: string[] = []
-  waysToLearn: string[] = []
-}
-
 export class Filters {
   interestLevels: InterestLevel[] = []
   role: string = ""

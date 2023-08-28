@@ -2,7 +2,6 @@
   <div class="login">
     <!-- Enter email -->
     <v-sheet 
-      v-if="!loggedIn"
       class="pa-6 rounded-lg"
       elevation=6
       >
@@ -81,7 +80,6 @@ h1 {
 <script lang="ts">
 import { ref } from 'vue'
 import router from '@/router'
-import { isLoggedIn } from '@/helpers/api'
 
 const email = ref("")
 const code = ref("")
@@ -133,8 +131,7 @@ export default {
     emailRules: [ isValidEmail ],
     codeRules: [ isValidCode ]
   }),
-  async setup() {
-    const loggedIn = await isLoggedIn()
+  setup() {
     return {
       sendEmail,
       attemptLogin,
@@ -143,8 +140,7 @@ export default {
       loading,
       email,
       isValidEmail,
-      isValidCode,
-      loggedIn
+      isValidCode
     }
   }
 }

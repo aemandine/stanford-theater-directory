@@ -141,22 +141,21 @@
       </div>
     </div>
     <v-virtual-scroll
-      height="60vh"
       :items="filteredUsers"
     >
       <template v-slot:default="{ item }">
         <DirectoryRow :is-filtered="!!filters.role" :user-id="item.id">
-          <template #name>{{ item.name }}</template>
+          <template #name>{{ item.name?.length ? item.name : "(Unnamed)" }}</template>
           <template #interest v-if="filters.role">
             <v-chip 
-              v-if="item.rolesOfInterest.includes(filters.role)" 
+              v-if="item.rolesOfInterest?.includes(filters.role)" 
               class="mr-1 mb-1"
               color="green"
               >
               Interested
             </v-chip>
             <v-chip 
-              v-if="item.rolesToLearn.includes(filters.role)"
+              v-if="item.rolesToLearn?.includes(filters.role)"
               class="mr-1 mb-1"
               color="blue"
               >
@@ -165,7 +164,7 @@
           </template>
           <template #interest v-else>
             <v-chip 
-              v-for="role in item.rolesOfInterest.sort()"
+              v-for="role in item.rolesOfInterest?.sort()"
               v-on:click="filters.role = role; filters.interestLevels = [InterestLevel.Interested]"
               class="mr-1 mb-1"
               color="green"
@@ -173,7 +172,7 @@
               {{ role }}
             </v-chip>
             <v-chip 
-              v-for="role in item.rolesToLearn.sort()"
+              v-for="role in item.rolesToLearn?.sort()"
               v-on:click="filters.role = role; filters.interestLevels = [InterestLevel.WantToLearn]"
               class="mr-1 mb-1"
               color="blue"
@@ -181,12 +180,12 @@
               <i>{{ role }}</i>
             </v-chip>
           </template>
-          <template #graduationYear>{{ item.graduationYear === 0 ? "" : item.graduationYear }}</template>
+          <template #graduationYear>{{ item.graduationYear }}</template>
           <template #email>{{ item.accountEmail }}</template>
           <template #notes>{{ item.notes }}</template>
           <template #tags v-if="Categories.MUSICAL_ROLES.includes(filters.role)">
             <v-chip 
-              v-for="instrument in item.instruments.sort()"
+              v-for="instrument in item.instruments?.sort()"
               class="mr-1 mb-1"
               color="purple"
               >
@@ -245,16 +244,16 @@ h1 {
 <script lang="ts">
 // Imports
 import { ref, computed } from 'vue'
-import { UserInfo, Filters, InterestLevel } from '@/helpers/classes'
+import { Filters, InterestLevel } from '@/helpers/classes'
 import DirectoryRow from '@/components/DirectoryRow.vue'
 import DirectoryInstructions from '@/components/DirectoryInstructions.vue'
 import Categories from '@/helpers/categories'
 import router from '@/router'
-import { getUsers } from '@/helpers/api'
+import { User, type UserInfo } from '@/helpers/user'
 
 // Refs and variables
 const filters = ref(new Filters())
-var allUsers: UserInfo[] | null
+var allUsers: User[] | null
 
 // Functions
 // Updates how the directory is sorted
@@ -292,7 +291,7 @@ const filteredUsers = computed(() => {
       // We want someone who is interested
       if (newFilters.interestLevels.includes(InterestLevel.Interested)) {
         // They are interested
-        if (userInfo.rolesOfInterest.includes(newFilters.role)) {
+        if (userInfo.rolesOfInterest?.includes(newFilters.role)) {
           matchingInterestLevelForRole = true
           matchingLearningStyle = true // If we're already looking for interested people, don't focus on learning style
         }
@@ -300,12 +299,12 @@ const filteredUsers = computed(() => {
       // If we want someone who wants to learn
       if (newFilters.interestLevels.includes(InterestLevel.WantToLearn)) {
         // They want to learn
-        if (userInfo.rolesToLearn.includes(newFilters.role)) {
+        if (userInfo.rolesToLearn?.includes(newFilters.role)) {
           matchingInterestLevelForRole = true
         }
         // Check against each learning style
         newFilters.learningStyles.forEach((style) => {
-          if (userInfo.waysToLearn.includes(style)) {
+          if (userInfo.waysToLearn?.includes(style)) {
             matchingLearningStyle = true
           }
         })
@@ -313,7 +312,7 @@ const filteredUsers = computed(() => {
       // If we want a musical person
       if (Categories.MUSICAL_ROLES.includes(newFilters.role)) {
         newFilters.instruments.forEach((instrument) => {
-          if (userInfo.instruments.includes(instrument)) {
+          if (userInfo.instruments?.includes(instrument)) {
             matchingInstrument = true
           }
         })
@@ -323,15 +322,34 @@ const filteredUsers = computed(() => {
     })
   }
   // Sort it
+  const emailSort = (a: UserInfo, b: UserInfo) => (a.accountEmail > b.accountEmail ? 1 : -1)
+  const nameSort = (a: UserInfo, b: UserInfo) => {
+    if (a.name == b.name) { // Sort by email if they have the same name
+      return emailSort(a, b)
+    }
+    // If they have no name, sort them to the end
+    if (!a.name) return 1
+    if (!b.name) return -1
+    return a.name > b.name ? 1 : -1
+  }
+  const graduationYearSort = (a: UserInfo, b: UserInfo) => {
+    if (a.graduationYear == b.graduationYear) {
+      return nameSort(a, b)
+    }
+    if (!a.graduationYear) return 1
+    if (!b.graduationYear) return -1
+    return a.graduationYear > b.graduationYear ? 1 : -1
+  }
+
   switch (filters.value.sortBy) {
     case "accountEmail":
-      filtered.sort((a, b) => (a["accountEmail"] > b["accountEmail"] ? 1 : -1))
+      filtered.sort(emailSort)
       break
     case "name":
-      filtered.sort((a, b) => (a["name"] > b["name"] ? 1 : -1))
-      break;
+      filtered.sort(nameSort)
+      break
     case "graduationYear":
-      filtered.sort((a, b) => (a["graduationYear"] > b["graduationYear"] ? 1 : -1))
+      filtered.sort(graduationYearSort)
       break
   }
   // Reverse if necessary
@@ -346,12 +364,15 @@ export default {
     DirectoryRow, DirectoryInstructions
   },
   async setup(props) {
-    allUsers = await getUsers()
+    allUsers = await User.allUsers()
     if (allUsers === null) {
       router.push("/")
     } else {
-      // Remove anyone without a name
-      allUsers = allUsers.filter((user) => user.name)
+      // Remove anyone with basically zero helpful information
+      allUsers = allUsers.filter((user) => user.name?.length || 
+                                           user.rolesOfInterest?.length || 
+                                           user.rolesToLearn?.length || 
+                                           user.notes?.length)
     }
     return {
       Categories,

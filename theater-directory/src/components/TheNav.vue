@@ -15,8 +15,11 @@ a {
 </style>
 
 <script lang="ts">
-import { isLoggedIn } from '@/helpers/api'
-import router from '@/router'
+// Imports
+import { getUserId } from "@/helpers/auth"
+import router from "@/router"
+
+// Functions
 const logout = async() => {
   const logout = await fetch("/api/auth/logout")
   if (logout.status !== 200) {
@@ -25,9 +28,10 @@ const logout = async() => {
   router.push("/")
   location.reload()
 }
+
 export default {
   async setup() {
-    const loggedIn = await isLoggedIn()
+    const loggedIn = (await getUserId()) !== null
     return {
       loggedIn,
       logout
