@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import RolesView from '../views/RolesView.vue'
 import DirectoryView from '../views/DirectoryView.vue'
+import OpportunitiesView from '../views/OpportunitiesView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/directory',
       name: 'directory',
       component: DirectoryView
+    },
+    {
+      path: '/opportunities',
+      name: 'opportunities',
+      component: OpportunitiesView
     }
   ]
 })
