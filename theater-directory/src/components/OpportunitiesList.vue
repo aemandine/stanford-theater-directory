@@ -1,4 +1,6 @@
 <template>
+  <p>Want to add an opportunity to the list? Email <a href="https://unofficialtheater.directory/profile/217dab88-db97-48d9-bd5d-70491f21fe31" target="_blank">Anna Mistele</a> and she can add it for you!</p>
+  <br/>
   <v-sheet 
     v-if="loggedIn"
     class="pa-6 rounded-lg"
