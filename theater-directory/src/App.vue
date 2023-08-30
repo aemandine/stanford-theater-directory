@@ -5,7 +5,7 @@ import TheNav from '@/components/TheNav.vue'
 
 <template>
   <header>
-    <h1>Campus Unofficial Theater Directory</h1>
+    <h1><RouterLink to="/" class="h1">Campus Unofficial Theater Directory</RouterLink></h1>
     <Suspense>
       <template #default>
         <TheNav />
@@ -36,7 +36,10 @@ header {
   color: var(--vt-c-white-mute);
   background-color: rgb(140, 21, 21);
 }
-
+a.h1 {
+  font-weight: bold;
+  color: var(--vt-c-white-mute);
+}
 h1 {
   text-align: left;
   flex-grow: 2;

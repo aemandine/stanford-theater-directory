@@ -4,13 +4,26 @@
     <RouterLink to="/roles">Browse Roles</RouterLink>
     <RouterLink to="/directory" v-if="loggedIn">Browse Directory</RouterLink>
     <RouterLink to="/profile" v-if="loggedIn">My Profile</RouterLink>
-    <a @click="logout" v-if="loggedIn">Log Out</a>
+    <a @click="logout" v-if="loggedIn" class="login-button">Log Out</a>
   </nav>
 </template>
 
 <style scoped>
 a {
   cursor: pointer;
+}
+
+.login-button {
+  background-color: white;
+  padding: 3px 1rem;
+  margin-left: 0.5rem;
+  border: 0;
+  border-radius: 10px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.488)
+}
+.login-button:hover {
+  background-color: #b5b5b5;
 }
 </style>
 
