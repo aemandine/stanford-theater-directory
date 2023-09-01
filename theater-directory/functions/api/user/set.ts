@@ -29,6 +29,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     if (!Categories.YEARS.includes(userInfo.graduationYear)) {
       userInfo.graduationYear = undefined
     }
+    if (!Categories.AFFILIATIONS.includes(userInfo.affiliation)) {
+      userInfo.affiliation = undefined
+    }
 
     // Okay, all good, let's save it
     await context.env.USERS.put(userId, JSON.stringify(userInfo))

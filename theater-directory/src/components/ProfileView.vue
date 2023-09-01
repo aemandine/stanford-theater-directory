@@ -6,6 +6,7 @@
       <h2>{{ user.name }}</h2>
       <h3>{{ user.pronouns }}</h3>
       <h3>{{ user.accountEmail }}</h3>
+      <h3>{{ user.affiliation }}</h3>
       <h3>Class of {{ user.graduationYear }}</h3>
       <div 
         class="chips"
@@ -69,6 +70,12 @@
         hide-details
         readonly
       ></v-textarea>
+      <h2 v-if="user.fallPlans || user.winterPlans || user.springPlans || user.summerPlans || user.otherPlans">Their 2023-2024 plans</h2>
+      <h3 v-if="user.fallPlans"><b>Fall 2023:</b> {{ user.fallPlans }}</h3>
+      <h3 v-if="user.winterPlans"><b>Winter 2024:</b> {{ user.winterPlans }}</h3>
+      <h3 v-if="user.springPlans"><b>Spring 2024:</b> {{ user.springPlans }}</h3>
+      <h3 v-if="user.summerPlans"><b>Summer 2024:</b> {{ user.summerPlans }}</h3>
+      <h3 v-if="user.otherPlans"><b>Other:</b> {{ user.otherPlans }}</h3>
       <br/>
     </div>
     <p v-else>User not found.</p>
@@ -78,6 +85,14 @@
 <style scoped>
 h1 {
   margin-bottom: 20px;
+}
+h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+h3 {
+  margin-top: -10px;
+  margin-bottom: 10px;
 }
 .profile {
   width: 700px;

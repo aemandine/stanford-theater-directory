@@ -8,7 +8,7 @@
       <v-form @submit.prevent="sendFeedback">
         <v-textarea
           v-model="message"
-          label="Let us know your thoughts about the website!"
+          label="What else do you want to see on this website?"
           class="w-100 mb-2"
           @update:focused="buttonText = 'Send Feedback'"
         ></v-textarea>

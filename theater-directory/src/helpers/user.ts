@@ -4,11 +4,17 @@ export interface UserInfo {
   graduationYear?: number
   accountEmail: string
   pronouns?: string
+  affiliation?: string
   rolesOfInterest?: string[]
   rolesToLearn?: string[]
   instruments?: string[]
   waysToLearn?: string[]
   notes?: string
+  fallPlans?: string
+  winterPlans?: string
+  springPlans?: string
+  summerPlans?: string
+  otherPlans?: string
 }
 
 export class User {
@@ -17,11 +23,17 @@ export class User {
   graduationYear?: number
   accountEmail: string
   pronouns?: string
+  affiliation?: string
   rolesOfInterest?: string[]
   rolesToLearn?: string[]
   instruments?: string[]
   waysToLearn?: string[]
   notes?: string
+  fallPlans?: string
+  winterPlans?: string
+  springPlans?: string
+  summerPlans?: string
+  otherPlans?: string
 
   protected constructor(userInfo: UserInfo) {
     this.id = userInfo.id
@@ -29,11 +41,17 @@ export class User {
     this.graduationYear = userInfo.graduationYear
     this.accountEmail = userInfo.accountEmail
     this.pronouns = userInfo.pronouns
+    this.affiliation = userInfo.affiliation
     this.rolesOfInterest = userInfo.rolesOfInterest
     this.rolesToLearn = userInfo.rolesToLearn
     this.instruments = userInfo.instruments
     this.waysToLearn = userInfo.waysToLearn
     this.notes = userInfo.notes
+    this.fallPlans = userInfo.fallPlans
+    this.winterPlans = userInfo.winterPlans
+    this.springPlans = userInfo.springPlans
+    this.summerPlans = userInfo.summerPlans
+    this.otherPlans = userInfo.otherPlans
   }
 
   /**

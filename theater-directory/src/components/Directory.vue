@@ -1,7 +1,5 @@
 <template>
   <div class="directory" v-if="allUsers !== null">
-    <h1>Directory</h1>
-    <DirectoryInstructions/>
     <div class="search">
       <h2>Display all users who</h2>
       <v-autocomplete
@@ -68,7 +66,6 @@
         placeholder="(optional filter)"
       ></v-autocomplete>
     </div>
-    <br/>
     <div>
       <DirectoryRow 
         v-if="filteredUsers.length > 0" 
@@ -94,7 +91,23 @@
           </div>
         </template>
         <template #interest v-if="filters.role">Interest Level</template>
-        <template #interest v-else>Roles of Interest</template>
+        <template #interest v-else>
+          Roles of Interest
+          <v-btn
+            variant="plain"
+            density="compact"
+            icon="mdi-information-outline"
+            class="ml-n1"
+            >
+            <v-icon 
+              icon="mdi-information-outline"
+              size="x-small"
+              />
+            <v-dialog activator="parent">
+              <DirectoryInstructions />
+            </v-dialog>
+          </v-btn>
+        </template>
         <template #graduationYear>
           <div @click="sortBy('graduationYear')">
             <b>Graduating</b>
@@ -142,6 +155,7 @@
     </div>
     <v-virtual-scroll
       :items="filteredUsers"
+      height="70vh"
     >
       <template v-slot:default="{ item }">
         <DirectoryRow :is-filtered="!!filters.role" :user-id="item.id">
@@ -182,7 +196,9 @@
           </template>
           <template #graduationYear>{{ item.graduationYear }}</template>
           <template #email>{{ item.accountEmail }}</template>
-          <template #notes>{{ item.notes }}</template>
+          <template #notes>
+            {{ truncate(item.notes ?? "", 200) }}
+          </template>
           <template #tags v-if="Categories.MUSICAL_ROLES.includes(filters.role)">
             <v-chip 
               v-for="instrument in item.instruments?.sort()"
@@ -194,7 +210,7 @@
           </template>
           <template #tags v-else>
             <v-chip 
-              v-for="style in item.waysToLearn.sort()"
+              v-for="style in item.waysToLearn?.sort()"
               class="mr-1 mb-1"
               color="orange"
               >
@@ -208,6 +224,9 @@
 </template>
 
 <style scoped>
+.v-dialog {
+  max-width: 400px;
+}
 .notSelected {
   opacity: 0.5;
 }
@@ -216,7 +235,7 @@
   align-items: center;
   flex-wrap: wrap;
   justify-content: flex-start;
-  margin: 20px 0px;
+  margin: 20px 0;
 }
 h2 {
   align-self: center;
@@ -225,9 +244,6 @@ h2 {
 }
 h3 {
   margin-top: 20px;
-}
-h1 {
-  margin-bottom: 15px;
 }
 @media (max-width: 800px) {
   .search {
@@ -256,6 +272,16 @@ const filters = ref(new Filters())
 var allUsers: User[] | null
 
 // Functions
+// Truncates the given string to a specific length
+const truncate = (text: string, length: number) => {
+  if (text.length <= length) {
+    return text
+  }
+  if (length < 3) {
+    return "..."
+  }
+  return text.substring(0, length - 3) + "..."
+}
 // Updates how the directory is sorted
 const sortBy = (property: string) => {
   const oldSort = filters.value.sortBy
@@ -267,8 +293,8 @@ const sortBy = (property: string) => {
     filters.value.sortReversed = false
   }
 }
+// Calculates the filtered list of users
 const filteredUsers = computed(() => {
-  console.log(filters.value)
   var filtered: UserInfo[] = JSON.parse(JSON.stringify(allUsers)) // Deep copy
   if (filters.value.hasFilter()) {
     // Filter it
@@ -284,33 +310,35 @@ const filteredUsers = computed(() => {
       }
 
       var matchingInterestLevelForRole = false
-      // If there are no instruments or learning styles to filter for, auto-true
-      var matchingLearningStyle = newFilters.learningStyles.length == 0 ? true : false
-      var matchingInstrument = newFilters.instruments.length == 0 ? true : false
+      var matchingLearningStyle = true
+      var matchingInstrument = true
 
       // We want someone who is interested
       if (newFilters.interestLevels.includes(InterestLevel.Interested)) {
         // They are interested
         if (userInfo.rolesOfInterest?.includes(newFilters.role)) {
           matchingInterestLevelForRole = true
-          matchingLearningStyle = true // If we're already looking for interested people, don't focus on learning style
         }
       }
+      
       // If we want someone who wants to learn
       if (newFilters.interestLevels.includes(InterestLevel.WantToLearn)) {
         // They want to learn
         if (userInfo.rolesToLearn?.includes(newFilters.role)) {
           matchingInterestLevelForRole = true
         }
-        // Check against each learning style
+        // Check against each learning style (if no learning styles, auto true)
+        matchingLearningStyle = newFilters.learningStyles.length == 0 ? true : false 
         newFilters.learningStyles.forEach((style) => {
           if (userInfo.waysToLearn?.includes(style)) {
             matchingLearningStyle = true
           }
         })
       }
+
       // If we want a musical person
       if (Categories.MUSICAL_ROLES.includes(newFilters.role)) {
+        matchingInstrument = newFilters.instruments.length == 0 ? true : false
         newFilters.instruments.forEach((instrument) => {
           if (userInfo.instruments?.includes(instrument)) {
             matchingInstrument = true
@@ -381,6 +409,7 @@ export default {
       filteredUsers,
       allUsers,
       sortBy,
+      truncate
     }
   }
 }

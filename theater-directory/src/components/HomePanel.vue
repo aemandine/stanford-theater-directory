@@ -13,7 +13,6 @@ h2, h3 {
   text-align: center;
 }
 h2 {
-  margin-top: 0px;
   color: var(--vt-c-purple-light);
 }
 .home-panel {

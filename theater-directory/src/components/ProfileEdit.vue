@@ -9,9 +9,7 @@
           color="var(--vt-c-purple-light)"
           icon="$warning"
           title="Note on privacy"
-          text="All the information on your profile is public to anyone with a stanford.edu email. Also, I don't
-          know why anyone would target this website, but technically a hacker could steal everyone's profile info. 
-          So please don't put any private information in your profile!"
+          text="All the information on your profile is public to anyone with a stanford.edu email."
       ></v-alert>
       <h2>Personal information</h2>
       <div id="inline">
@@ -20,18 +18,27 @@
           v-model="user.name"
           v-on:update:model-value="saveButtonText = 'Save'"
         ></v-text-field>
+        <v-text-field
+          label="Pronouns" 
+          v-model="user.pronouns"
+          v-on:update:model-value="saveButtonText = 'Save'"
+        ></v-text-field>
+      </div>
+      <div :id="user.affiliation != 'Faculty' && user.affiliation != 'Staff' ? 'inline' : ''">    
+        <v-select
+          label="Stanford affiliation"
+          v-model="user.affiliation"
+          :items="Categories.AFFILIATIONS"
+          v-on:update:model-value="saveButtonText = 'Save'"
+        ></v-select>
         <v-select 
+          v-if="user.affiliation != 'Faculty' && user.affiliation != 'Staff'"
           label="Grad year" 
           :items="Categories.YEARS"
           v-model="user.graduationYear"
           v-on:update:model-value="saveButtonText = 'Save'"
         ></v-select>
       </div>
-      <v-text-field
-        label="Pronouns" 
-        v-model="user.pronouns"
-        v-on:update:model-value="saveButtonText = 'Save'"
-      ></v-text-field>
       <v-text-field
         label="Email (Stanford)" 
         v-model="user.accountEmail"
@@ -106,6 +113,33 @@
         v-on:update:model-value="saveButtonText = 'Save'"
       ></v-textarea>
       <br/>
+      <h2>Your 2023-2024 plans</h2>
+      <h3>What are you working on this year?</h3>
+      <v-text-field 
+        label="Fall 2023"
+        v-model="user.fallPlans"
+        v-on:update:model-value="saveButtonText = 'Save'"
+      ></v-text-field>
+      <v-text-field 
+        label="Winter 2024"
+        v-model="user.winterPlans"
+        v-on:update:model-value="saveButtonText = 'Save'"
+      ></v-text-field>
+      <v-text-field 
+        label="Spring 2024"
+        v-model="user.springPlans"
+        v-on:update:model-value="saveButtonText = 'Save'"
+      ></v-text-field>
+      <v-text-field 
+        label="Summer 2024"
+        v-model="user.summerPlans"
+        v-on:update:model-value="saveButtonText = 'Save'"
+      ></v-text-field>
+      <v-text-field 
+        label="Other plans"
+        v-model="user.otherPlans"
+        v-on:update:model-value="saveButtonText = 'Save'"
+      ></v-text-field>
       <div class="button">
         <v-btn
           color="var(--vt-c-purple-light)"
@@ -127,6 +161,14 @@
 }
 h1 {
   margin-bottom: 20px;
+}
+h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+h3 {
+  margin-top: -10px;
+  margin-bottom: 10px;
 }
 .profile {
   width: 700px;

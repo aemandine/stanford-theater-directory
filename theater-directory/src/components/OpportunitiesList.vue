@@ -7,7 +7,7 @@
     elevation=6
     color="var(--color-background-mute)"
     >
-    <h1>SLOCo Winter 2024 Mainstage Production: Mary Poppins</h1>
+    <h2>SLOCo Winter 2024 Mainstage Production: Mary Poppins</h2>
     <h3>Tentatively scheduled for Week 9 of Winter Quarter.</h3>
     <p>Are you <em>Practically Perfect?</em></p>
     <p>Need a <em>Spoonful of Sugar?</em></p>
@@ -20,12 +20,11 @@
 </template>
 
 <style scoped>
-h1 {
-  font-weight: bold;
+h2 {
   color: var(--vt-c-purple-light);
   margin-bottom: 10px;
 }
-h2, h3, p {
+h3, p {
   color: var(--color-text);
 }
 em {

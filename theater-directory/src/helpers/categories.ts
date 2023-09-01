@@ -23,7 +23,7 @@ export default {
     "Clarinet",
     "Double bass",
     "Drums",
-    "Guitar (electric))",
+    "Guitar (electric)",
     "Flute",
     "French horn",
     "Harp",
@@ -65,5 +65,6 @@ export default {
     "Assistant role",
     "Casual 1-on-1 with student"
   ].sort(),
-  YEARS: [2024, 2025, 2026, 2027, 2028, 2029, 2030]
+  YEARS: [2024, 2025, 2026, 2027, 2028, 2029, 2030],
+  AFFILIATIONS: ["Undergraduate", "Graduate", "Coterm", "Faculty", "Staff"]
 }
