@@ -8,7 +8,7 @@ export default {
     "Set Designer", "Prop Master", "Writer", "Deviser", "Dramaturg",
     "Music Director", "Vocal Director", "Board Operator",
     "Hair and Makeup", "General Run Crew", "Musical Improvisor", "Musician",
-    "Singer/Vocalist", "Composer", "Dancer", "Drag Artist"
+    "Singer/Vocalist", "Composer", "Dancer", "Drag Artist", "Script Supervisor"
   ].sort(),
   MUSICAL_ROLES: ["Musical Improvisor", "Musician"],
   INSTRUMENTS: [
@@ -65,6 +65,6 @@ export default {
     "Assistant role",
     "Casual 1-on-1 with student"
   ].sort(),
-  YEARS: [2024, 2025, 2026, 2027, 2028, 2029, 2030],
+  YEARS: [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030],
   AFFILIATIONS: ["Undergraduate", "Graduate", "Coterm", "Faculty", "Staff"]
 }

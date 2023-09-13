@@ -108,7 +108,7 @@ export class User {
    * @async
    * @return {Promise<User[] | null>} All users, or null if load failed.
    */
-  public static async allUsers() { 
+  public static async allUsers(): Promise<User[] | null> { 
     try {
       const resp = await fetch("/api/users")
       if (resp.status === 200) {

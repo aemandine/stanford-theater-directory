@@ -10,7 +10,7 @@
         </div>
         <p v-if="isFiltered" id="unimportant"><slot name="interest"></slot></p>
         <p v-else><slot name="interest"></slot></p>
-        <p id="unimportant"><slot name="graduationYear"></slot></p>
+        <p id="unimportant"><slot name="affiliation"></slot></p>
         <p id="unimportant"><slot name="email"></slot></p>
         <p id="unimportant"><slot name="notes"></slot></p>
         <p v-if="isFiltered"><slot name="tags"></slot></p>

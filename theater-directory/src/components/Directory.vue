@@ -108,11 +108,11 @@
             </v-dialog>
           </v-btn>
         </template>
-        <template #graduationYear>
-          <div @click="sortBy('graduationYear')">
-            <b>Graduating</b>
+        <template #affiliation>
+          <div @click="sortBy('affiliation')">
+            <b>Affiliation</b>
             <v-icon 
-              v-if="filters.sortBy == 'graduationYear' && filters.sortReversed"
+              v-if="filters.sortBy == 'affiliation' && filters.sortReversed"
               icon="mdi-menu-up" 
               class="pb-1" 
               size="25" >
@@ -121,7 +121,7 @@
               v-else
               icon="mdi-menu-down" 
               class="pb-1" 
-              :class="{notSelected: filters.sortBy != 'graduationYear'}"
+              :class="{notSelected: filters.sortBy != 'affiliation'}"
               size="25" >
             </v-icon>
           </div>
@@ -194,7 +194,7 @@
               <i>{{ role }}</i>
             </v-chip>
           </template>
-          <template #graduationYear>{{ item.graduationYear }}</template>
+          <template #affiliation>{{ getAffiliationLabel(item) }}</template>
           <template #email>{{ item.accountEmail }}</template>
           <template #notes>
             {{ truncate(item.notes ?? "", 200) }}
@@ -282,6 +282,14 @@ const truncate = (text: string, length: number) => {
   }
   return text.substring(0, length - 3) + "..."
 }
+// Turns an affiliation and year into a nice label
+const getAffiliationLabel = (user: UserInfo) => {
+  var label = user.affiliation ?? ""
+  if (user.graduationYear) {
+    label += ` (${user.graduationYear})`
+  }
+  return label
+}
 // Updates how the directory is sorted
 const sortBy = (property: string) => {
   const oldSort = filters.value.sortBy
@@ -360,13 +368,15 @@ const filteredUsers = computed(() => {
     if (!b.name) return -1
     return a.name > b.name ? 1 : -1
   }
-  const graduationYearSort = (a: UserInfo, b: UserInfo) => {
-    if (a.graduationYear == b.graduationYear) {
+  const affiliationSort = (a: UserInfo, b: UserInfo) => {
+    const aAffiliationYear = getAffiliationLabel(a)
+    const bAffiliationYear = getAffiliationLabel(b)
+    if (aAffiliationYear == bAffiliationYear) {
       return nameSort(a, b)
     }
-    if (!a.graduationYear) return 1
-    if (!b.graduationYear) return -1
-    return a.graduationYear > b.graduationYear ? 1 : -1
+    if (aAffiliationYear == "") return 1
+    if (bAffiliationYear == "") return -1
+    return aAffiliationYear > bAffiliationYear ? 1 : -1
   }
 
   switch (filters.value.sortBy) {
@@ -376,8 +386,8 @@ const filteredUsers = computed(() => {
     case "name":
       filtered.sort(nameSort)
       break
-    case "graduationYear":
-      filtered.sort(graduationYearSort)
+    case "affiliation":
+      filtered.sort(affiliationSort)
       break
   }
   // Reverse if necessary
@@ -409,7 +419,8 @@ export default {
       filteredUsers,
       allUsers,
       sortBy,
-      truncate
+      truncate,
+      getAffiliationLabel
     }
   }
 }

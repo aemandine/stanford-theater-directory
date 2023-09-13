@@ -4,24 +4,41 @@ import TheNav from '@/components/TheNav.vue'
 </script>
 
 <template>
-  <header>
-    <h1><RouterLink to="/" class="h1">Campus Unofficial Theater Directory</RouterLink></h1>
-    <Suspense>
-      <template #default>
-        <TheNav />
-      </template>
-      <template #fallback>
-        <nav>
-          <RouterLink to="/">Home</RouterLink>
-        </nav>
-      </template>
-    </Suspense>
-  </header>
+  <div class="page">
+    <header>
+      <h1><RouterLink to="/" class="h1">Campus Unofficial Theater Directory</RouterLink></h1>
+      <Suspense>
+        <template #default>
+          <TheNav />
+        </template>
+        <template #fallback>
+          <nav>
+            <RouterLink to="/">Home</RouterLink>
+          </nav>
+        </template>
+      </Suspense>
+    </header>
 
-  <RouterView :key="$route.fullPath" />
+    <RouterView :key="$route.fullPath" />
+
+    <footer>
+      Cross-organizational theater directory commissioned by AATP, created by Anna Mistele
+    </footer>
+  </div>
 </template>
 
 <style scoped>
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+footer {
+  background-color: var(--color-background-mute);
+  text-align: center;
+  padding: 5px;
+  margin-top: auto;
+}
 a {
   color: var(--vt-c-red-light);
 }

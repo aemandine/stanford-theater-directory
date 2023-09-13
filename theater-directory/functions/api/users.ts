@@ -12,18 +12,18 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     if (userId === null) {
       return new Response(null, { status: 401 })
     }
+
+    const userList = await context.env.USERS.list()
+    const allUsers = await Promise.all(userList.keys.map(async (userKey) => {
+      try {
+        const userInfoString = await context.env.USERS.get(userKey.name)
+        return JSON.parse(userInfoString)
+      } catch {
+        return new Response(null, { status: 500 })
+      }
+    }))
+    return new Response(JSON.stringify({ allUsers }), { status: 200 })
   } catch {
     return new Response(null, { status: 500 })
   }
-
-  const userList = await context.env.USERS.list()
-  const allUsers = await Promise.all(userList.keys.map(async (userKey) => {
-    try {
-      const userInfoString = await context.env.USERS.get(userKey.name)
-      return JSON.parse(userInfoString)
-    } catch {
-      return new Response(null, { status: 500 })
-    }
-  }))
-  return new Response(JSON.stringify({ allUsers }), { status: 200 })
 }

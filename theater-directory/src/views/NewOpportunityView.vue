@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import OpportunityList from "@/components/OpportunityList.vue"
+import OpportunityNew from "@/components/OpportunityNew.vue"
 </script>
 
 <template>
   <main>
     <Suspense>
       <template #default>
-        <OpportunityList />
+        <OpportunityNew />
       </template>
       <template #fallback>
-        <p>Loading opportunities...</p>
+        <p>Loading opportunity creator...</p>
       </template>
     </Suspense>
   </main>

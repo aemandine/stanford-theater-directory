@@ -7,7 +7,7 @@
       <h3>{{ user.pronouns }}</h3>
       <h3>{{ user.accountEmail }}</h3>
       <h3>{{ user.affiliation }}</h3>
-      <h3>Class of {{ user.graduationYear }}</h3>
+      <h3 v-if="user.graduationYear">Class of {{ user.graduationYear }}</h3>
       <div 
         class="chips"
         v-if="user.rolesOfInterest?.length"

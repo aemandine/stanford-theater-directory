@@ -7,6 +7,10 @@ import Categories from '@/helpers/categories'
 
 export const onRequest: PagesFunction<Env> = async (context) => {
   try {
+    // Make sure it's a post request
+    if (context.request.method !== "POST") {
+      return new Response(null, { status: 405 })
+    }
     const authVerify = await fetch(
       "https://unofficialtheater.directory/api/auth/verify",
       { headers: context.request.headers }
@@ -32,6 +36,17 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     if (!Categories.AFFILIATIONS.includes(userInfo.affiliation)) {
       userInfo.affiliation = undefined
     }
+    if (["Faculty", "Staff"].includes(userInfo.affiliation)) { // If they're not a student remove the grad year
+      userInfo.graduationYear = undefined
+    }
+
+    // Replace immutable values with what they were initially saved as
+    const existingUserString = await context.env.USERS.get(userId)
+    if (!existingUserString) {
+      return new Response(null, { status: 400 }) // If there's no existing user, need to hit /login first
+    }
+    const existingUser: UserInfo = JSON.parse(existingUserString)
+    userInfo.accountEmail = existingUser.accountEmail // email is immutable (we already checked ID)
 
     // Okay, all good, let's save it
     await context.env.USERS.put(userId, JSON.stringify(userInfo))
