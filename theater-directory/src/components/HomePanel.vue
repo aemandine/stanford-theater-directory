@@ -1,6 +1,6 @@
 <template>
   <div class="home-panel">
-    <h2>Welcome to the unofficial theater directory!</h2>
+    <h2>Welcome to the unofficial arts directory!</h2>
     <TheLogin v-if="!loggedIn" />
     <HomeInfo />
     <h2 v-if="!loggedIn">To access the directory and create a profile for yourself, log in above!</h2>
