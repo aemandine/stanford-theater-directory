@@ -2,7 +2,7 @@
   <div class="opportunities-list" v-if="userId && upcomingOpportunities !== null">
     <v-btn          
       color="var(--vt-c-purple-light)"
-      class="mt-5 mb-5"
+      class="mt-5 mb-5 text-none"
       href="/opportunities/new">
       <p class="font-weight-bold text-white">Publish an opportunity</p>
     </v-btn>

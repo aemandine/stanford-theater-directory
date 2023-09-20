@@ -4,7 +4,7 @@
       v-if="user"
     >
       <h2>{{ user.name }}</h2>
-      <h3>{{ user.pronouns }}</h3>
+      <h3 v-if="user.pronouns"><b>Pronouns:</b> {{ user.pronouns }}</h3>
       <h3>{{ user.accountEmail }}</h3>
       <h3>{{ user.affiliation }}</h3>
       <h3 v-if="user.graduationYear">Class of {{ user.graduationYear }}</h3>

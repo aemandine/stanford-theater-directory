@@ -22,7 +22,7 @@ import TheNav from '@/components/TheNav.vue'
     <RouterView :key="$route.fullPath" />
 
     <footer>
-      Cross-organizational theater directory commissioned by AATP, created by Anna Mistele
+      Cross-organizational theater directory from AATP x Theater Lab, created by Anna Mistele
     </footer>
   </div>
 </template>

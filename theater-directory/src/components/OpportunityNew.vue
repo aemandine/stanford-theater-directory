@@ -15,7 +15,7 @@
         label="Description" 
         v-model="opportunity.content"
         persistent-hint
-        hint="Write text **like this** to emphasize it!"
+        hint="Write text **like this** to emphasize it, and write [your text](https://yourlink.com) to add a link!"
         class="mb-5"
       ></v-textarea>
       <div class="button">

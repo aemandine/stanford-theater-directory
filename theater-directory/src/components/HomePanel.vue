@@ -4,7 +4,7 @@
     <TheLogin v-if="!loggedIn" />
     <HomeInfo />
     <h2 v-if="!loggedIn">To access the directory and create a profile for yourself, log in above!</h2>
-    <HomeFeedback v-if="loggedIn" />
+    <HomeNav v-if="loggedIn" />
   </div>
 </template>
 
@@ -27,12 +27,12 @@ h2 {
 <script lang="ts">
 import TheLogin from "@/components/TheLogin.vue"
 import HomeInfo from "@/components/HomeInfo.vue"
-import HomeFeedback from "@/components/HomeFeedback.vue"
+import HomeNav from "@/components/HomeNav.vue"
 import { getUserId } from "@/helpers/auth"
 
 export default {
   components: {
-    TheLogin, HomeInfo, HomeFeedback
+    TheLogin, HomeInfo, HomeNav
   },
   async setup() {
     const loggedIn = (await getUserId()) !== null
