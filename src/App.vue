@@ -6,7 +6,7 @@ import TheNav from '@/components/TheNav.vue'
 <template>
   <div class="page">
     <header>
-      <h1><RouterLink to="/" class="h1">Campus Unofficial Arts Directory</RouterLink></h1>
+      <h1><RouterLink to="/" class="h1">Campus Arts Directory</RouterLink></h1>
       <Suspense>
         <template #default>
           <TheNav />
@@ -22,7 +22,7 @@ import TheNav from '@/components/TheNav.vue'
     <RouterView :key="$route.fullPath" />
 
     <footer>
-      Cross-organizational arts directory from AATP x Theater Lab, created by Anna Mistele
+      Campus Arts Directory from AATP x Theater Lab, created by Anna Mistele
     </footer>
   </div>
 </template>

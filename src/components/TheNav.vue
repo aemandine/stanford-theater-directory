@@ -3,7 +3,7 @@
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/directory" v-if="loggedIn">Directory</RouterLink>
     <RouterLink to="/opportunities" v-if="loggedIn">Opportunities</RouterLink>
-    <RouterLink to="/roles">Browse Roles</RouterLink>
+    <RouterLink to="/roles">Roles</RouterLink>
     <RouterLink to="/profile" v-if="loggedIn">My Profile</RouterLink>
     <a @click="logout" v-if="loggedIn" class="login-button">Log Out</a>
   </nav>

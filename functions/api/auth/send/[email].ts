@@ -64,7 +64,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     }
     const body = {
       "to": email,
-      "from": { "email": "info@unofficialtheater.directory", "name": "Theater Directory 🌲" },
+      "from": { "email": "info@unofficialtheater.directory", "name": "Campus Arts Directory 🌲" },
       "subject": "Your login code!",
       "text": `Your login code is ${newCode}. Please don't share with anyone. It expires in 10 minutes.`
     }

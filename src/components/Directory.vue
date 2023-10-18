@@ -366,7 +366,7 @@ const filteredUsers = computed(() => {
     // If they have no name, sort them to the end
     if (!a.name) return 1
     if (!b.name) return -1
-    return a.name > b.name ? 1 : -1
+    return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
   }
   const affiliationSort = (a: UserInfo, b: UserInfo) => {
     const aAffiliationYear = getAffiliationLabel(a)

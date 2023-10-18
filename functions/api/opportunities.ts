@@ -37,6 +37,8 @@ export const onRequest: PagesFunction<Env> = async (context) => {
         return opp
       } catch { return }
     }))
+    // Remove nulls (e.g. expired dates)
+    upcomingOpportunities = upcomingOpportunities.filter((item) => !!item)
     return new Response(JSON.stringify({ upcomingOpportunities }), { status: 200 })
   } catch (e) {
     return new Response(JSON.stringify({ error: e }), { status: 500 })

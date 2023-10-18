@@ -1,5 +1,6 @@
 interface Env {
   FEEDBACK: KVNamespace
+  USERS: KVNamespace
   EMAIL_API_URL: string
   EMAIL_TOKEN: string
   FEEDBACK_EMAIL_ADDRESS: string
@@ -13,12 +14,16 @@ class Feedback {
   message: string = ""
   date: Date = new Date()
   userId: string = ""
+  email: string = ""
 
-  constructor(message: string, userId: string) {
+  constructor(message: string, userId: string, email: string) {
     this.message = message
     this.userId = userId
+    this.email = email
   }
 }
+
+import { type UserInfo } from '@/helpers/user'
 
 export const onRequest: PagesFunction<Env> = async (context) => {
   try {
@@ -35,8 +40,13 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     if (userId === null) {
       return new Response(null, { status: 401 })
     }
+    const existingUserString = await context.env.USERS.get(userId)
+    if (!existingUserString) {
+      return new Response(null, { status: 400 }) // If there's no existing user, need to hit /login first
+    }
+    const existingUser: UserInfo = JSON.parse(existingUserString)
     const feedbackInput: FeedbackInput = await context.request.json()
-    const feedback = new Feedback(feedbackInput.message, userId)
+    const feedback = new Feedback(feedbackInput.message, userId, existingUser.accountEmail)
     await context.env.FEEDBACK.put(crypto.randomUUID(), JSON.stringify(feedback))
 
     // Send me an email about it
@@ -46,9 +56,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     }
     const body = {
       "to": context.env.FEEDBACK_EMAIL_ADDRESS,
-      "from": { "email": "info@unofficialtheater.directory", "name": "Theater Directory 🌲" },
+      "from": { "email": "info@unofficialtheater.directory", "name": "Campus Arts Directory 🌲" },
       "subject": "Suggestion box!",
-      "text": feedbackInput.message
+      "text": `${feedback.message}\n\nFrom ${feedback.email}`
     }
     const resp = await fetch(url, {
       method: "POST",
