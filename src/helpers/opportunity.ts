@@ -75,7 +75,7 @@ export class Opportunity {
     var label = "Posted"
     var linkedLabel = ""
     if (this.created) {
-      label += ` ${this.created.getMonth()}/${this.created.getDate()}/${this.created.getFullYear()}`
+      label += ` ${this.created.getMonth() + 1}/${this.created.getDate()}/${this.created.getFullYear()}`
     }
     if (this.author) {
       label += " by"
