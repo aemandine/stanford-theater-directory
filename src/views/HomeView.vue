@@ -9,7 +9,7 @@
           Loading info...
         </template>
       </Suspense>
-      <iframe src="https://calendar.google.com/calendar/embed?src=1b8d89b4f204f19c4a8478e67ee9987f5cda36d3c6e00aec16854de52c8c94f5%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="700" height="480" frameborder="0" scrolling="yes"></iframe>
+      <iframe src="https://calendar.google.com/calendar/embed?src=1b8d89b4f204f19c4a8478e67ee9987f5cda36d3c6e00aec16854de52c8c94f5%40group.calendar.google.com&ctz=America%2FPalo_Alto" style="border: 0" width="700" height="480" frameborder="0" scrolling="yes"></iframe>
     </div>
   </main>
 </template>
